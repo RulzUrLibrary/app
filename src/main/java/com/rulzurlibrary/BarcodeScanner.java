@@ -33,6 +33,7 @@ public class BarcodeScanner extends AppCompatActivity {
 
     private boolean barcodeScanned = false;
     private boolean previewing = true;
+    private static final String TAG = "RulzUrLibrary";
 
     static {
         System.loadLibrary("iconv");
@@ -90,13 +91,24 @@ public class BarcodeScanner extends AppCompatActivity {
     /**
      * A safe way to get an instance of the Camera object.
      */
-    public static Camera getCameraInstance() {
+    public Camera getCameraInstance() {
+        releaseCameraAndPreview();
         Camera c = null;
         try {
             c = Camera.open();
         } catch (Exception e) {
+            Log.d(TAG, "Error setting camera preview: " + e.getMessage());
         }
         return c;
+    }
+
+    private void releaseCameraAndPreview() {
+        if (mPreview != null) mPreview.setmCamera(null);
+
+        if (mCamera != null) {
+            mCamera.release();
+            mCamera = null;
+        }
     }
 
     private void releaseCamera() {
