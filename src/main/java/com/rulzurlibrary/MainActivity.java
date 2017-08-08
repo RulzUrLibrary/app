@@ -19,6 +19,8 @@ import net.sourceforge.zbar.ImageScanner;
 import net.sourceforge.zbar.Symbol;
 import net.sourceforge.zbar.SymbolSet;
 
+import org.json.JSONException;
+
 import java.io.File;
 
 import io.fotoapparat.Fotoapparat;
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
 	private ImageScanner scanner;
     private Handler mHandler;
+    private Api api;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
                 showAlertDialog((String) message.obj);
             }
         };
+
+        api = Api.getInstance(this);
 	}
 
 	private void setupFotoapparat() {
@@ -253,6 +258,11 @@ public class MainActivity extends AppCompatActivity {
                     msg.obj = sym.getData().trim(); // Put the string into Message, into "obj" field.
                     msg.setTarget(mHandler); // Set the Handler
                     msg.sendToTarget(); //Send the message
+                    try {
+                        api.sendIsbn(sym.getData().trim());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 		}
