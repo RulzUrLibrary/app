@@ -19,9 +19,8 @@ import net.sourceforge.zbar.ImageScanner;
 import net.sourceforge.zbar.Symbol;
 import net.sourceforge.zbar.SymbolSet;
 
-import org.json.JSONException;
-
 import java.io.File;
+import java.util.HashMap;
 
 import io.fotoapparat.Fotoapparat;
 import io.fotoapparat.FotoapparatSwitcher;
@@ -54,220 +53,180 @@ import static io.fotoapparat.result.transformer.SizeTransformers.scaled;
 
 public class MainActivity extends AppCompatActivity {
 
-	private final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
-	private boolean hasCameraPermission;
-	private CameraView cameraView;
+    private final PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
+    private boolean hasCameraPermission;
+    private CameraView cameraView;
 
-	private FotoapparatSwitcher fotoapparatSwitcher;
-	private Fotoapparat frontFotoapparat;
-	private Fotoapparat backFotoapparat;
+    private FotoapparatSwitcher fotoapparatSwitcher;
+    private Fotoapparat frontFotoapparat;
+    private Fotoapparat backFotoapparat;
 
-	private ImageScanner scanner;
-    private Handler mHandler;
+    private ImageScanner scanner;
     private Api api;
+    private HashMap<String, Book> gathered;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-		cameraView = (CameraView) findViewById(R.id.camera_view);
-		hasCameraPermission = permissionsDelegate.hasCameraPermission();
+        cameraView = (CameraView) findViewById(R.id.camera_view);
+        hasCameraPermission = permissionsDelegate.hasCameraPermission();
 
-		if (hasCameraPermission) {
-			cameraView.setVisibility(View.VISIBLE);
-		} else {
-			permissionsDelegate.requestCameraPermission();
-		}
+        if (hasCameraPermission) {
+            cameraView.setVisibility(View.VISIBLE);
+        } else {
+            permissionsDelegate.requestCameraPermission();
+        }
 
-		setupFotoapparat();
+        setupFotoapparat();
 
-		takePictureOnClick(cameraView);
-		focusOnLongClick(cameraView);
+        focusOnClick(cameraView);
 
-		setupSwitchCameraButton();
+        setupSwitchCameraButton();
         // Instance barcode scanner
         scanner = new ImageScanner();
         scanner.setConfig(0, Config.X_DENSITY, 3);
         scanner.setConfig(0, Config.Y_DENSITY, 3);
 
-        mHandler = new Handler(Looper.getMainLooper()) {
+        gathered = new HashMap<>();
+
+        api = Api.getInstance(this, new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message message) {
-                showAlertDialog((String) message.obj);
+                Book book = (Book) message.obj;
+                gathered.put(book.Isbn, book);
+                showAlertDialog(String.format("Isbn: %s, Title: %s", book.Isbn, book.Title));
             }
-        };
+        });
+    }
 
-        api = Api.getInstance(this);
-	}
+    private void setupFotoapparat() {
+        frontFotoapparat = createFotoapparat(LensPosition.FRONT);
+        backFotoapparat = createFotoapparat(LensPosition.BACK);
+        fotoapparatSwitcher = FotoapparatSwitcher.withDefault(backFotoapparat);
+    }
 
-	private void setupFotoapparat() {
-		frontFotoapparat = createFotoapparat(LensPosition.FRONT);
-		backFotoapparat = createFotoapparat(LensPosition.BACK);
-		fotoapparatSwitcher = FotoapparatSwitcher.withDefault(backFotoapparat);
-	}
+    private void setupSwitchCameraButton() {
+        View switchCameraButton = findViewById(R.id.switchCamera);
+        switchCameraButton.setVisibility(
+                canSwitchCameras()
+                        ? View.VISIBLE
+                        : View.GONE
+        );
+        switchCameraOnClick(switchCameraButton);
+    }
 
-	private void setupSwitchCameraButton() {
-		View switchCameraButton = findViewById(R.id.switchCamera);
-		switchCameraButton.setVisibility(
-				canSwitchCameras()
-						? View.VISIBLE
-						: View.GONE
-		);
-		switchCameraOnClick(switchCameraButton);
-	}
+    private void switchCameraOnClick(View view) {
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchCamera();
+            }
+        });
+    }
 
-	private void switchCameraOnClick(View view) {
-		view.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				switchCamera();
-			}
-		});
-	}
+    private void focusOnClick(View view) {
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fotoapparatSwitcher.getCurrentFotoapparat().autoFocus();
+            }
+        });
+    }
 
-	private void focusOnLongClick(View view) {
-		view.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-				fotoapparatSwitcher.getCurrentFotoapparat().autoFocus();
 
-				return true;
-			}
-		});
-	}
+    private boolean canSwitchCameras() {
+        return frontFotoapparat.isAvailable() == backFotoapparat.isAvailable();
+    }
 
-	private void takePictureOnClick(View view) {
-		view.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				takePicture();
-			}
-		});
-	}
-
-	private boolean canSwitchCameras() {
-		return frontFotoapparat.isAvailable() == backFotoapparat.isAvailable();
-	}
-
-	private Fotoapparat createFotoapparat(LensPosition position) {
-		return Fotoapparat
-				.with(this)
-				.into(cameraView)
-				.previewScaleType(ScaleType.CENTER_CROP)
-				.photoSize(standardRatio(biggestSize()))
-				.lensPosition(lensPosition(position))
-				.focusMode(firstAvailable(
-						continuousFocus(),
-						autoFocus(),
-						fixed()
-				))
-				.flash(firstAvailable(
-						autoRedEye(),
-						autoFlash(),
-						torch(),
-						off()
-				))
-				.frameProcessor(new SampleFrameProcessor())
-				.logger(loggers(
-						logcat(),
-						fileLogger(this)
-				))
-				.cameraErrorCallback(new CameraErrorCallback() {
-					@Override
-					public void onError(CameraException e) {
-						Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_LONG).show();
-					}
-				})
-				.build();
-	}
-
-	private void takePicture() {
-		PhotoResult photoResult = fotoapparatSwitcher.getCurrentFotoapparat().takePicture();
-
-		photoResult.saveToFile(new File(
-				getExternalFilesDir("photos"),
-				"photo.jpg"
-		));
-
-		photoResult
-				.toBitmap(scaled(0.25f))
-				.whenAvailable(new PendingResult.Callback<BitmapPhoto>() {
-					@Override
-					public void onResult(BitmapPhoto result) {
-						ImageView imageView = (ImageView) findViewById(R.id.result);
-
-						imageView.setImageBitmap(result.bitmap);
-						imageView.setRotation(-result.rotationDegrees);
-					}
-				});
-	}
-
-	private void switchCamera() {
-		if (fotoapparatSwitcher.getCurrentFotoapparat() == frontFotoapparat) {
-			fotoapparatSwitcher.switchTo(backFotoapparat);
-		} else {
-			fotoapparatSwitcher.switchTo(frontFotoapparat);
-		}
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-		if (hasCameraPermission) {
-			fotoapparatSwitcher.start();
-		}
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		if (hasCameraPermission) {
-			fotoapparatSwitcher.stop();
-		}
-	}
-
-	@Override
-	public void onRequestPermissionsResult(int requestCode,
-										   @NonNull String[] permissions,
-										   @NonNull int[] grantResults) {
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		if (permissionsDelegate.resultGranted(requestCode, permissions, grantResults)) {
-			fotoapparatSwitcher.start();
-			cameraView.setVisibility(View.VISIBLE);
-		}
-	}
-
-	private class SampleFrameProcessor implements FrameProcessor {
-
-		@Override
-		public void processFrame(Frame frame) {
-			// Perform frame processing, if needed
-            Image barcode = new Image(frame.size.width, frame.size.height, "Y800");
-            barcode.setData(frame.image);
-            int result = scanner.scanImage(barcode);
-
-            if (result != 0) {
-
-                SymbolSet syms = scanner.getResults();
-                for (Symbol sym : syms) {
-
-                    Log.i("<<<<<<Asset Code>>>>> ",
-                            "<<<<Bar Code>>> " + sym.getData());
-                    Message msg = Message.obtain(); // Creates an new Message instance
-                    msg.obj = sym.getData().trim(); // Put the string into Message, into "obj" field.
-                    msg.setTarget(mHandler); // Set the Handler
-                    msg.sendToTarget(); //Send the message
-                    try {
-                        api.sendIsbn(sym.getData().trim());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+    private Fotoapparat createFotoapparat(LensPosition position) {
+        return Fotoapparat
+                .with(this)
+                .into(cameraView)
+                .previewScaleType(ScaleType.CENTER_CROP)
+                .photoSize(standardRatio(biggestSize()))
+                .lensPosition(lensPosition(position))
+                .focusMode(firstAvailable(
+                        continuousFocus(),
+                        autoFocus(),
+                        fixed()
+                ))
+                .flash(firstAvailable(
+                        autoRedEye(),
+                        autoFlash(),
+                        torch(),
+                        off()
+                ))
+                .frameProcessor(new SampleFrameProcessor())
+                .logger(loggers(
+                        logcat(),
+                        fileLogger(this)
+                ))
+                .cameraErrorCallback(new CameraErrorCallback() {
+                    @Override
+                    public void onError(CameraException e) {
+                        Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_LONG).show();
                     }
-                }
-            }
-		}
+                })
+                .build();
+    }
 
-	}
+    private void takePicture() {
+        PhotoResult photoResult = fotoapparatSwitcher.getCurrentFotoapparat().takePicture();
+
+        photoResult.saveToFile(new File(
+                getExternalFilesDir("photos"),
+                "photo.jpg"
+        ));
+
+        photoResult
+                .toBitmap(scaled(0.25f))
+                .whenAvailable(new PendingResult.Callback<BitmapPhoto>() {
+                    @Override
+                    public void onResult(BitmapPhoto result) {
+                        ImageView imageView = (ImageView) findViewById(R.id.result);
+
+                        imageView.setImageBitmap(result.bitmap);
+                        imageView.setRotation(-result.rotationDegrees);
+                    }
+                });
+    }
+
+    private void switchCamera() {
+        if (fotoapparatSwitcher.getCurrentFotoapparat() == frontFotoapparat) {
+            fotoapparatSwitcher.switchTo(backFotoapparat);
+        } else {
+            fotoapparatSwitcher.switchTo(frontFotoapparat);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (hasCameraPermission) {
+            fotoapparatSwitcher.start();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (hasCameraPermission) {
+            fotoapparatSwitcher.stop();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (permissionsDelegate.resultGranted(requestCode, permissions, grantResults)) {
+            fotoapparatSwitcher.start();
+            cameraView.setVisibility(View.VISIBLE);
+        }
+    }
 
     private void showAlertDialog(String message) {
 
@@ -281,5 +240,32 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .show();
+    }
+
+    private class SampleFrameProcessor implements FrameProcessor {
+
+        @Override
+        public void processFrame(Frame frame) {
+            // Perform frame processing, if needed
+            String isbn;
+            Image barcode = new Image(frame.size.width, frame.size.height, "Y800");
+            barcode.setData(frame.image);
+
+            if (scanner.scanImage(barcode) != 0) {
+
+                SymbolSet syms = scanner.getResults();
+                for (Symbol sym : syms) {
+                    isbn = sym.getData().trim();
+                    if (gathered.containsKey(isbn)) {
+                        continue;
+                    }
+                    Log.i("<<<<<<Asset Code>>>>> ", "<<<<Bar Code>>> " + isbn);
+                    gathered.put(isbn, null);
+                    api.sendIsbn(isbn);
+
+                }
+            }
+        }
+
     }
 }
