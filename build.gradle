@@ -6,9 +6,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        classpath 'com.google.gms:google-services:3.1.0'
     }
 }
 
@@ -20,6 +18,7 @@ allprojects {
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 26
@@ -46,7 +45,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
+    compile 'com.android.support:design:26.0.0-alpha1'
 	compile 'me.dm7.barcodescanner:zbar:1.8.3'
+    compile 'com.google.android.gms:play-services-auth:9.0.0'
     compile 'io.fotoapparat.fotoapparat:library:1.2.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.volley:volley:1.0.0'
