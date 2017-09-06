@@ -64,7 +64,11 @@ public class Api {
         }
 
         Log.d("foo", "SENDING ISBN "+isbn);
-        getRequestQueue().add(new PostRequest(Request.Method.POST, data));
+        Message msg = Message.obtain(); // Creates an new Message instance
+        msg.obj = "Sending: " + isbn;
+        msg.setTarget(mHandler); // Set the Handler
+        msg.sendToTarget(); //Send the message
+        //getRequestQueue().add(new PostRequest(Request.Method.POST, data));
     }
     private class PostRequest extends JsonObjectRequest {
 
