@@ -1,5 +1,7 @@
 package com.rulzurlibrary;
 
+import com.rulzurlibrary.common.Book;
+
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

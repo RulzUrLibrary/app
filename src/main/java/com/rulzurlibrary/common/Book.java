@@ -1,12 +1,12 @@
-package com.rulzurlibrary;
+package com.rulzurlibrary.common;
 
 /**
  * Created by max on 8/9/17.
  */
 
 public class Book {
-    String isbn;
-    String title;
+    public String isbn;
+    public String title;
     String description;
 
     public Book(String isbn) {
