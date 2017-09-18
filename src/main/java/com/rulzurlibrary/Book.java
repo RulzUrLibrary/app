@@ -5,13 +5,16 @@ package com.rulzurlibrary;
  */
 
 public class Book {
-    public final String Isbn;
-    public final String Title;
-    public final String Description;
+    String isbn;
+    String title;
+    String description;
 
-    public Book(String isbn, String title, String description) {
-        Isbn = isbn;
-        Title = title;
-        Description = description;
+    public Book(String isbn) {
+        this.isbn = isbn;
+    }
+
+    @Override
+    public String toString() {
+        return isbn + " " + title;
     }
 }

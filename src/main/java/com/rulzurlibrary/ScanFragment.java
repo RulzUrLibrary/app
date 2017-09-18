@@ -10,11 +10,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import net.sourceforge.zbar.Config;
@@ -33,6 +35,9 @@ import io.fotoapparat.parameter.ScaleType;
 import io.fotoapparat.preview.Frame;
 import io.fotoapparat.preview.FrameProcessor;
 import io.fotoapparat.view.CameraView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static io.fotoapparat.log.Loggers.fileLogger;
 import static io.fotoapparat.log.Loggers.logcat;
@@ -54,7 +59,6 @@ public class ScanFragment extends Fragment {
     private boolean hasCameraPermission;
 
     private ImageScanner scanner;
-    private Api api;
     private HashMap<String, Book> gathered;
     private Fotoapparat fotoapparat;
 
@@ -81,6 +85,7 @@ public class ScanFragment extends Fragment {
 
         gathered = new HashMap<>();
 
+        /*
         api = Api.getInstance(view.getContext(), new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message message) {
@@ -90,6 +95,7 @@ public class ScanFragment extends Fragment {
                 showAlertDialog((String) message.obj);
             }
         });
+        */
         return view;
     }
 
@@ -164,6 +170,9 @@ public class ScanFragment extends Fragment {
     }
 
     private class SampleFrameProcessor implements FrameProcessor {
+        RulzUrLibraryService rulzUrLibraryService = RulzUrLibraryService.retrofit.create(RulzUrLibraryService.class);
+
+
 
         @Override
         public void processFrame(Frame frame) {
@@ -177,13 +186,26 @@ public class ScanFragment extends Fragment {
                 SymbolSet syms = scanner.getResults();
                 for (Symbol sym : syms) {
                     isbn = sym.getData().trim();
+                    Log.i("<<<<<<Asset Code>>>>> ", "<<<<Bar Code>>> " + isbn);
                     if (gathered.containsKey(isbn)) {
                         continue;
                     }
-                    Log.i("<<<<<<Asset Code>>>>> ", "<<<<Bar Code>>> " + isbn);
-                    gathered.put(isbn, null);
-                    api.sendIsbn(isbn);
+                    final Call<Book> call = rulzUrLibraryService.postIsbn(new Book(isbn));
 
+                    
+                    call.enqueue(new Callback<Book>() {
+                        @Override
+                        public void onResponse(@NonNull Call<Book> call, @NonNull Response<Book> response) {
+                            Book book = response.body();
+                            assert book != null;
+                            showAlertDialog(String.format("Isbn: %s, Title: %s", book.isbn, book.title));
+                        }
+                        @Override
+                        public void onFailure(@NonNull Call<Book> call, @NonNull Throwable t) {
+                            showAlertDialog("Something went wrong: " + t.getMessage());
+                        }
+                    });
+                    gathered.put(isbn, null);
                 }
             }
         }
