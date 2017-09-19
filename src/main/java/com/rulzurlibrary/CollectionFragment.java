@@ -213,6 +213,21 @@ public class CollectionFragment extends Fragment implements
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mGoogleApiClient.stopAutoManage(getActivity());
+        mGoogleApiClient.disconnect();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mGoogleApiClient.stopAutoManage(getActivity());
+        mGoogleApiClient.disconnect();
+    }
+
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
