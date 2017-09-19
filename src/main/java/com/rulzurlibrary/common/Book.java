@@ -7,6 +7,8 @@ package com.rulzurlibrary.common;
 public class Book {
     public String isbn;
     public String title;
+    public int number;
+    public boolean owned;
     String description;
 
     public Book(String isbn) {
