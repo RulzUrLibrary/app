@@ -28,7 +28,6 @@ public class CollectionFragment extends Fragment {
     private ListView listView;
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,37 +52,32 @@ public class CollectionFragment extends Fragment {
                 ServiceGenerator.createService(RulzUrLibraryService.class, "foo", "bar");
         final Call<Series> call = rulzUrLibraryService.getSeries();
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        assert fab != null;
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(@NonNull final View view) {
-                call.enqueue(new Callback<Series>() {
-                    @Override
-                    public void onResponse(@NonNull Call<Series> call, @NonNull Response<Series> response) {
-                        if (response.isSuccessful()) {
-                            // user object available
-                            Series series = response.body();
-                            assert series != null;
-                            adapter = new SerieAdapter(getContext(), series.series);
-                            listView.setAdapter(adapter);
-                            for (Serie serie : series.series) {
-                                Log.d("success", serie.Title());
-                            }
-                        } else {
-                            Log.d("error", response.toString());
-                            // error response, no access to resource?
-                        }
-                    }
 
-                    @Override
-                    public void onFailure(@NonNull Call<Series> call, @NonNull Throwable t) {
-                        // something went completely south (like no internet connection)
-                        Log.d("Error", t.getMessage());
+        call.enqueue(new Callback<Series>() {
+            @Override
+            public void onResponse(@NonNull Call<Series> call, @NonNull Response<Series> response) {
+                if (response.isSuccessful()) {
+                    // user object available
+                    Series series = response.body();
+                    assert series != null;
+                    adapter = new SerieAdapter(getContext(), series.series);
+                    listView.setAdapter(adapter);
+                    for (Serie serie : series.series) {
+                        Log.d("success", serie.Title());
                     }
-                });
+                } else {
+                    Log.d("error", response.toString());
+                    // error response, no access to resource?
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Series> call, @NonNull Throwable t) {
+                // something went completely south (like no internet connection)
+                Log.d("Error", t.getMessage());
             }
         });
+
 
         return view;
     }
