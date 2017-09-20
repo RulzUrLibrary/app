@@ -43,6 +43,19 @@ public class Serie {
         return this.owned() / this.volumes.size();
     }
 
+    public String authors() {
+        String res = "";
+
+        if ((null == authors || authors.size() == 0)) {
+            return res;
+        } else {
+            for (Author author : authors) {
+                res += author.name + ", ";
+            }
+            return res.substring(0, res.length() - 2);
+        }
+    }
+
     public String volumes() {
         return String.format("%d / %d", owned(), this.volumes.size());
     }

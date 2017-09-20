@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.rulzurlibrary.common.Book;
 import com.rulzurlibrary.common.Serie;
@@ -24,6 +25,8 @@ public class SerieFragment extends Fragment{
     private ArrayList<Book> bookList;
     private BookAdapter adapter;
     private ListView listView;
+    TextView serieName;
+    TextView serieAuthors;
 
 
     @Override
@@ -33,10 +36,13 @@ public class SerieFragment extends Fragment{
         /**
          * Array List for Binding Data from JSON to this List
          */
-        View view = inflater.inflate(R.layout.collection_fragment, container, false);
+        final View view = inflater.inflate(R.layout.serie_layout, container, false);
         Bundle bundle = this.getArguments();
 
         listView = view.findViewById(R.id.listView);
+        serieName = view.findViewById(R.id.serieName);
+        serieAuthors = view.findViewById(R.id.serieAuthors);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -61,6 +67,9 @@ public class SerieFragment extends Fragment{
                     adapter = new BookAdapter(getContext(), serie.volumes);
                     bookList = new ArrayList<>(serie.volumes);
                     listView.setAdapter(adapter);
+
+                    serieName.setText(serie.name);
+                    serieAuthors.setText(serie.authors());
                 } else {
                     Log.d("error", response.toString());
                     // error response, no access to resource?
