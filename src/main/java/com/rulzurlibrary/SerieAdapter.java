@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.rulzurlibrary.common.Serie;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -49,8 +50,8 @@ public class SerieAdapter extends ArrayAdapter<Serie> {
 
         assert item != null;
         vh.textViewName.setText(item.Title());
-        //vh.textViewEmail.setText(item.getEmail());
-        //Picasso.with(context).load(item.getProfilePic()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(vh.imageView);
+        vh.textViewEmail.setText(item.description);
+        Picasso.with(context).load(item.getThumbName()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(vh.imageView);
 
         return vh.rootView;
     }
