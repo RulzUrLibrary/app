@@ -3,11 +3,6 @@ package com.rulzurlibrary.common;
 import com.rulzurlibrary.RulzUrLibraryService;
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
-
-/**
- * Created by max on 9/19/17.
- */
 
 public class Serie {
     public int id;
@@ -18,7 +13,7 @@ public class Serie {
     public ArrayList<Author> authors;
     public ArrayList<Book> volumes;
 
-    public String Title() {
+    public String title() {
         if (this.name == null) {
             return this.title;
         }
@@ -29,4 +24,27 @@ public class Serie {
         String isbn = (this.isbn == null ? volumes.get(0).isbn : this.isbn) + ".jpg";
         return RulzUrLibraryService.endpoint + "/thumbs/" + isbn;
     }
+
+    private int owned() {
+        int count = 0;
+        for (Book volume: this.volumes) {
+            if (volume.owned) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public boolean isBook() {
+        return volumes == null;
+    }
+
+    public float ratio() {
+        return this.owned() / this.volumes.size();
+    }
+
+    public String volumes() {
+        return String.format("%d / %d", owned(), this.volumes.size());
+    }
+
 }

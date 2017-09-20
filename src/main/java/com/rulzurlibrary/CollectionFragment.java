@@ -63,7 +63,7 @@ public class CollectionFragment extends Fragment {
                     adapter = new SerieAdapter(getContext(), series.series);
                     listView.setAdapter(adapter);
                     for (Serie serie : series.series) {
-                        Log.d("success", serie.Title());
+                        Log.d("success", serie.title());
                     }
                 } else {
                     Log.d("error", response.toString());

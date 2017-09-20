@@ -1,7 +1,9 @@
 package com.rulzurlibrary;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +36,7 @@ public class SerieAdapter extends ArrayAdapter<Serie> {
         return serieList.get(position);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
@@ -49,8 +52,12 @@ public class SerieAdapter extends ArrayAdapter<Serie> {
         Serie item = getItem(position);
 
         assert item != null;
-        vh.textViewName.setText(item.Title());
-        vh.textViewEmail.setText(item.description);
+        vh.textViewName.setText(item.title());
+
+        if (!item.isBook()) {
+            vh.textViewEmail.setText(item.volumes());
+            vh.textViewEmail.setBackgroundColor(context.getColor(item.ratio() == 1.0 ? R.color.success : R.color.primary));
+        }
         Picasso.with(context).load(item.getThumbName()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(vh.imageView);
 
         return vh.rootView;
