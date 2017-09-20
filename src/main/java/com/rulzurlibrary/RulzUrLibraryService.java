@@ -27,4 +27,7 @@ public interface RulzUrLibraryService {
 
     @GET("/series/")
     Call<Series> getSeries();
+
+    @GET("/series/{id}")
+    Call<Serie> getSerie(@Path("id") int serieId);
 }

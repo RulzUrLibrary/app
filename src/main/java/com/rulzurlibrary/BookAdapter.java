@@ -12,51 +12,55 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.rulzurlibrary.common.Serie;
+import com.rulzurlibrary.common.Book;
+import com.rulzurlibrary.common.Book;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class SerieAdapter extends ArrayAdapter<Serie> {
+public class BookAdapter extends ArrayAdapter<Book> {
 
-    private List<Serie> serieList;
+    private List<Book> bookList;
     private Context context;
     private LayoutInflater mInflater;
 
     // Constructors
-    public SerieAdapter(Context context, List<Serie> objects) {
+    public BookAdapter(Context context, List<Book> objects) {
         super(context, 0, objects);
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
-        serieList = objects;
+        bookList = objects;
     }
 
     @Override
-    public Serie getItem(int position) {
-        return serieList.get(position);
+    public Book getItem(int position) {
+        return bookList.get(position);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        final ViewHolder vh;
+        final com.rulzurlibrary.BookAdapter.ViewHolder vh;
         if (convertView == null) {
-            View view = mInflater.inflate(R.layout.series_layout, parent, false);
-            vh = ViewHolder.create((RelativeLayout) view);
+            View view = mInflater.inflate(R.layout.book_layout, parent, false);
+            vh = com.rulzurlibrary.BookAdapter.ViewHolder.create((RelativeLayout) view);
             view.setTag(vh);
         } else {
-            vh = (ViewHolder) convertView.getTag();
+            vh = (com.rulzurlibrary.BookAdapter.ViewHolder) convertView.getTag();
         }
 
-        Serie item = getItem(position);
+        Book item = getItem(position);
 
         assert item != null;
         vh.textViewName.setText(item.title());
 
-        if (!item.isBook()) {
-            vh.textViewEmail.setText(item.volumes());
-            vh.textViewEmail.setBackgroundColor(context.getColor(item.ratio() == 1.0 ? R.color.success : R.color.primary));
+        if (item.owned) {
+            vh.textViewEmail.setText("✔");
+            vh.textViewEmail.setBackgroundColor(context.getColor(R.color.success));
+        } else {
+            vh.textViewEmail.setText("+");
+            vh.textViewEmail.setBackgroundColor(context.getColor(R.color.primary));
         }
         Picasso.with(context).load(item.getThumbName()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(vh.imageView);
 
@@ -76,11 +80,11 @@ public class SerieAdapter extends ArrayAdapter<Serie> {
             this.textViewEmail = textViewEmail;
         }
 
-        static ViewHolder create(RelativeLayout rootView) {
+        static com.rulzurlibrary.BookAdapter.ViewHolder create(RelativeLayout rootView) {
             ImageView imageView = rootView.findViewById(R.id.imageView);
             TextView textViewName = rootView.findViewById(R.id.textViewName);
             TextView textViewEmail = rootView.findViewById(R.id.textViewEmail);
-            return new ViewHolder(rootView, imageView, textViewName, textViewEmail);
+            return new com.rulzurlibrary.BookAdapter.ViewHolder(rootView, imageView, textViewName, textViewEmail);
         }
     }
 }

@@ -3,7 +3,6 @@ package com.rulzurlibrary;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.rulzurlibrary.common.Book;
 import com.rulzurlibrary.common.Serie;
-import com.rulzurlibrary.common.Series;
 import com.rulzurlibrary.common.ServiceGenerator;
 
 import java.util.ArrayList;
@@ -21,10 +20,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CollectionFragment extends Fragment {
-
-    private ArrayList<Serie> serieList;
-    private SerieAdapter adapter;
+public class SerieFragment extends Fragment{
+    private ArrayList<Book> bookList;
+    private BookAdapter adapter;
     private ListView listView;
 
 
@@ -36,21 +34,13 @@ public class CollectionFragment extends Fragment {
          * Array List for Binding Data from JSON to this List
          */
         View view = inflater.inflate(R.layout.collection_fragment, container, false);
-
+        Bundle bundle = this.getArguments();
 
         listView = view.findViewById(R.id.listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                FragmentTransaction trans = getFragmentManager().beginTransaction();
-                Fragment fragment = new SerieFragment();
-                Bundle bundle = new Bundle();
-                bundle.putInt("serieId", serieList.get(position).id);
-                fragment.setArguments(bundle);
-                trans.replace(R.id.root_frame, fragment);
-                trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                trans.addToBackStack(null);
-                trans.commit();
+                Log.d("foo", String.format("%d", position));
             }
         });
 
@@ -58,22 +48,19 @@ public class CollectionFragment extends Fragment {
 
         RulzUrLibraryService rulzUrLibraryService =
                 ServiceGenerator.createService(RulzUrLibraryService.class, "foo", "bar");
-        final Call<Series> call = rulzUrLibraryService.getSeries();
+        final Call<Serie> call = rulzUrLibraryService.getSerie(bundle.getInt("serieId"));
 
 
-        call.enqueue(new Callback<Series>() {
+        call.enqueue(new Callback<Serie>() {
             @Override
-            public void onResponse(@NonNull Call<Series> call, @NonNull Response<Series> response) {
+            public void onResponse(@NonNull Call<Serie> call, @NonNull Response<Serie> response) {
                 if (response.isSuccessful()) {
                     // user object available
-                    Series series = response.body();
-                    assert series != null;
-                    adapter = new SerieAdapter(getContext(), series.series);
-                    serieList = new ArrayList<>(series.series);
+                    Serie serie = response.body();
+                    assert serie != null;
+                    adapter = new BookAdapter(getContext(), serie.volumes);
+                    bookList = new ArrayList<>(serie.volumes);
                     listView.setAdapter(adapter);
-                    for (Serie serie : series.series) {
-                        Log.d("success", serie.title());
-                    }
                 } else {
                     Log.d("error", response.toString());
                     // error response, no access to resource?
@@ -81,7 +68,7 @@ public class CollectionFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Call<Series> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<Serie> call, @NonNull Throwable t) {
                 // something went completely south (like no internet connection)
                 Log.d("Error", t.getMessage());
             }
