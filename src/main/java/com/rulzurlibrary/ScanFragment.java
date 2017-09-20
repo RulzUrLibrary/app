@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rulzurlibrary.common.Book;
@@ -52,6 +53,7 @@ import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 
 public class ScanFragment extends Fragment {
     private CameraView cameraView;
+    private TextView resultView;
     private boolean hasCameraPermission;
 
     private ImageScanner scanner;
@@ -64,6 +66,7 @@ public class ScanFragment extends Fragment {
         View view = inflater.inflate(R.layout.scan_fragment, container, false);
 
         cameraView = view.findViewById(R.id.camera_view);
+        resultView = view.findViewById(R.id.result);
         PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this.getActivity());
         hasCameraPermission = permissionsDelegate.hasCameraPermission();
 
@@ -184,6 +187,7 @@ public class ScanFragment extends Fragment {
                 for (Symbol sym : syms) {
                     isbn = sym.getData().trim();
                     Log.i("<<<<<<Asset Code>>>>> ", "<<<<Bar Code>>> " + isbn);
+                    resultView.setText("Scanned: " + isbn);
                     if (gathered.containsKey(isbn)) {
                         continue;
                     }
@@ -196,7 +200,7 @@ public class ScanFragment extends Fragment {
                             if (response.isSuccessful()) {
                                 Book book = response.body();
                                 assert book != null;
-                                showAlertDialog(String.format("Isbn: %s, Title: %s", book.isbn, book.title()));
+                                showAlertDialog(String.format("Isbn: %s,\nTitle: %s", book.isbn, book.title()));
                             } else {
                                 Log.e(TAG, response.toString());
                             }

@@ -16,11 +16,19 @@
         tools:layout_editor_absoluteY="8dp"
         tools:visibility="visible"/>
 
-    <ImageView
+    <TextView
         android:id="@+id/result"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:contentDescription="@string/result_of_scan" />
+        android:layout_margin="5dp"
+        android:contentDescription="@string/result_of_scan"
+        android:textSize="20sp"
+        android:textColor="#fff"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="3"
+        android:shadowColor="#000"
+        />
 
     <TextView
         android:id="@+id/no_permission"
