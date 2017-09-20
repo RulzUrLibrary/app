@@ -57,6 +57,7 @@ public class ScanFragment extends Fragment {
     private ImageScanner scanner;
     private HashMap<String, Book> gathered;
     private Fotoapparat fotoapparat;
+    private static final String TAG = "ScanFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -192,9 +193,13 @@ public class ScanFragment extends Fragment {
                     call.enqueue(new Callback<Book>() {
                         @Override
                         public void onResponse(@NonNull Call<Book> call, @NonNull Response<Book> response) {
-                            Book book = response.body();
-                            assert book != null;
-                            showAlertDialog(String.format("Isbn: %s, Title: %s", book.isbn, book.title));
+                            if (response.isSuccessful()) {
+                                Book book = response.body();
+                                assert book != null;
+                                showAlertDialog(String.format("Isbn: %s, Title: %s", book.isbn, book.title()));
+                            } else {
+                                Log.e(TAG, response.toString());
+                            }
                         }
                         @Override
                         public void onFailure(@NonNull Call<Book> call, @NonNull Throwable t) {
