@@ -4,6 +4,8 @@ import com.rulzurlibrary.common.Book;
 import com.rulzurlibrary.common.Serie;
 import com.rulzurlibrary.common.Series;
 
+import java.util.List;
+
 import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -14,6 +16,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface RulzUrLibraryService {
     public static final String endpoint = "https://api.rulz.xyz/";
@@ -30,4 +33,7 @@ public interface RulzUrLibraryService {
 
     @GET("/series/{id}")
     Call<Serie> getSerie(@Path("id") int serieId);
+
+    @GET("/")
+    Call<List<Book>> search(@Query("pattern") String pattern);
 }
