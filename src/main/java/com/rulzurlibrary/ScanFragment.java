@@ -6,6 +6,7 @@ package com.rulzurlibrary;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -99,6 +100,9 @@ public class ScanFragment extends Fragment {
             @Override
             public void handleMessage(Message message) {
                 Book book = (Book) message.obj;
+                Intent intent = new Intent(getContext(), BookActivity.class);
+                intent.putExtra("book", book);
+                startActivity(intent);
                 showAlertDialog(String.format("Isbn: %s,\nTitle: %s", book.isbn, book.title()));
             }
         };

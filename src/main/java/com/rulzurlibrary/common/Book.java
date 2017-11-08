@@ -1,10 +1,14 @@
 package com.rulzurlibrary.common;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.v4.os.ParcelableCompat;
+
 import com.rulzurlibrary.RulzUrLibraryService;
 
 import java.util.ArrayList;
 
-public class Book {
+public class Book implements Parcelable {
     public String isbn;
     public String title;
     public int number;
@@ -17,6 +21,28 @@ public class Book {
     public Book(String isbn) {
         this.isbn = isbn;
     }
+
+    protected Book(Parcel in) {
+        isbn = in.readString();
+        title = in.readString();
+        number = in.readInt();
+        serie = in.readString();
+        owned = in.readByte() != 0;
+        description = in.readString();
+        authors = in.createTypedArrayList(Author.CREATOR);
+    }
+
+    public static final Creator<Book> CREATOR = new Creator<Book>() {
+        @Override
+        public Book createFromParcel(Parcel in) {
+            return new Book(in);
+        }
+
+        @Override
+        public Book[] newArray(int size) {
+            return new Book[size];
+        }
+    };
 
     @Override
     public String toString() {
@@ -35,5 +61,21 @@ public class Book {
 
     public String getThumbName() {
         return RulzUrLibraryService.endpoint + "thumbs/" + this.isbn + ".jpg";
+    }
+
+    @Override
+    public int describeContents() {
+        return hashCode();
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(isbn);
+        parcel.writeString(title);
+        parcel.writeString(description);
+        parcel.writeString(serie);
+        parcel.writeInt(number);
+        parcel.writeByte((byte) (owned ? 1 : 0));
+        parcel.writeTypedList(authors);
     }
 }

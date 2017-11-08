@@ -1,9 +1,36 @@
 package com.rulzurlibrary.common;
 
-/**
- * Created by max on 9/19/17.
- */
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Author {
+public class Author implements Parcelable{
     public String name;
+
+    protected Author() {
+    }
+    protected Author(Parcel in) {
+        name = in.readString();
+    }
+
+    public static final Creator<Author> CREATOR = new Creator<Author>() {
+        @Override
+        public Author createFromParcel(Parcel in) {
+            return new Author(in);
+        }
+
+        @Override
+        public Author[] newArray(int size) {
+            return new Author[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return hashCode();
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+    }
 }
