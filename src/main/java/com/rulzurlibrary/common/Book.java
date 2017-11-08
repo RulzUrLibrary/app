@@ -9,7 +9,6 @@ public class Book {
     public String title;
     public int number;
     public String serie;
-    public String thumbnail;
     public boolean owned;
     public String description;
     public ArrayList<Author> authors;
@@ -35,6 +34,6 @@ public class Book {
     }
 
     public String getThumbName() {
-        return RulzUrLibraryService.endpoint + this.thumbnail;
+        return RulzUrLibraryService.endpoint + "thumbs/" + this.isbn + ".jpg";
     }
 }

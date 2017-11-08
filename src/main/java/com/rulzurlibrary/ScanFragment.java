@@ -7,6 +7,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -54,6 +57,8 @@ import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 public class ScanFragment extends Fragment {
     private CameraView cameraView;
     private TextView resultView;
+    private Handler isbnHandler;
+    private Handler bookHandler;
     private boolean hasCameraPermission;
 
     private ImageScanner scanner;
@@ -84,18 +89,20 @@ public class ScanFragment extends Fragment {
         scanner.setConfig(0, Config.Y_DENSITY, 3);
 
         gathered = new HashMap<>();
-
-        /*
-        api = Api.getInstance(view.getContext(), new Handler(Looper.getMainLooper()) {
+        isbnHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message message) {
-                //Book book = (Book) message.obj;
-                //gathered.put(book.Isbn, book);
-                //showAlertDialog(String.format("Isbn: %s, Title: %s", book.Isbn, book.Title));
-                showAlertDialog((String) message.obj);
+                resultView.setText(message.obj.toString());
             }
-        });
-        */
+        };
+        bookHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message message) {
+                Book book = (Book) message.obj;
+                showAlertDialog(String.format("Isbn: %s,\nTitle: %s", book.isbn, book.title()));
+            }
+        };
+
         return view;
     }
 
@@ -187,27 +194,35 @@ public class ScanFragment extends Fragment {
                 for (Symbol sym : syms) {
                     isbn = sym.getData().trim();
                     Log.i("<<<<<<Asset Code>>>>> ", "<<<<Bar Code>>> " + isbn);
-                    resultView.setText("Scanned: " + isbn);
+
                     if (gathered.containsKey(isbn)) {
                         continue;
                     }
                     final Call<Book> call = rulzUrLibraryService.postIsbn(new Book(isbn));
 
-                    
+                    Message m = isbnHandler.obtainMessage();
+                    m.obj = String.format("Scanned: %s", isbn);
+                    m.sendToTarget();
+
                     call.enqueue(new Callback<Book>() {
                         @Override
                         public void onResponse(@NonNull Call<Book> call, @NonNull Response<Book> response) {
                             if (response.isSuccessful()) {
-                                Book book = response.body();
-                                assert book != null;
-                                showAlertDialog(String.format("Isbn: %s,\nTitle: %s", book.isbn, book.title()));
+                                Message m = bookHandler.obtainMessage();
+                                m.obj = response.body();
+                                m.sendToTarget();
                             } else {
                                 Log.e(TAG, response.toString());
+                                Message m = isbnHandler.obtainMessage();
+                                m.obj = String.format("API call went wrong: %s", response.toString());
+                                m.sendToTarget();
                             }
                         }
                         @Override
                         public void onFailure(@NonNull Call<Book> call, @NonNull Throwable t) {
-                            showAlertDialog("Something went wrong: " + t.getMessage());
+                            Message m = isbnHandler.obtainMessage();
+                            m.obj = String.format("Something went wrong: %s", t.getMessage());
+                            m.sendToTarget();
                         }
                     });
                     gathered.put(isbn, null);

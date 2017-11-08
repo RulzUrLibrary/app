@@ -68,9 +68,13 @@ public class CollectionFragment extends Fragment {
                     // user object available
                     Series series = response.body();
                     assert series != null;
-                    adapter = new SerieAdapter(getContext(), series.series);
-                    serieList = new ArrayList<>(series.series);
-                    listView.setAdapter(adapter);
+                    try {
+                        adapter = new SerieAdapter(getContext(), series.series);
+                        serieList = new ArrayList<>(series.series);
+                        listView.setAdapter(adapter);
+                    } catch (NullPointerException e) {
+                        Log.d("foo", e.toString());
+                    }
                     for (Serie serie : series.series) {
                         Log.d("success", serie.title());
                     }

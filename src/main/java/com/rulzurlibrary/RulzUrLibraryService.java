@@ -1,6 +1,7 @@
 package com.rulzurlibrary;
 
 import com.rulzurlibrary.common.Book;
+import com.rulzurlibrary.common.Books;
 import com.rulzurlibrary.common.Serie;
 import com.rulzurlibrary.common.Series;
 
@@ -14,17 +15,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface RulzUrLibraryService {
-    public static final String endpoint = "https://api.rulz.xyz/";
-    public static final Retrofit retrofit = new Retrofit.Builder()
+    String endpoint = "https://api.rulz.xyz/";
+    Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(RulzUrLibraryService.endpoint)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
+    @Headers({"Content-Type: application/json"})
     @POST("/books/")
     Call<Book> postIsbn(@Body Book book);
 
@@ -34,6 +37,6 @@ public interface RulzUrLibraryService {
     @GET("/series/{id}")
     Call<Serie> getSerie(@Path("id") int serieId);
 
-    @GET("/")
-    Call<List<Book>> search(@Query("pattern") String pattern);
+    @GET("/books/")
+    Call<Books> search(@Query("search") String pattern);
 }

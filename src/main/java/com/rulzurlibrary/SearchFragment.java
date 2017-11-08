@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.rulzurlibrary.common.Book;
+import com.rulzurlibrary.common.Books;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,16 +40,16 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
     @Override
     public boolean onQueryTextSubmit(String s) {
-        final Call<List<Book>> call = rulzUrLibraryService.search(s);
-        call.enqueue(new Callback<List<Book>>() {
+        final Call<Books> call = rulzUrLibraryService.search(s);
+        call.enqueue(new Callback<Books>() {
             @Override
-            public void onResponse(@NonNull Call<List<Book>> call, @NonNull Response<List<Book>> response) {
+            public void onResponse(@NonNull Call<Books> call, @NonNull Response<Books> response) {
                 if (response.isSuccessful()) {
                     // user object available
-                    List<Book> books = response.body();
+                    Books books = response.body();
                     assert books != null;
-                    adapter = new BookAdapter(getContext(), books);
-                    bookList = new ArrayList<>(books);
+                    adapter = new BookAdapter(getContext(), books.books);
+                    bookList = new ArrayList<>(books.books);
                     listView.setAdapter(adapter);
                 } else {
                     Log.d(TAG, response.toString());
@@ -57,7 +58,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<Book>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<Books> call, @NonNull Throwable t) {
                 // something went completely south (like no internet connection)
                 Log.d(TAG, t.getMessage());
             }

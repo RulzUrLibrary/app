@@ -58,7 +58,9 @@ public class SerieAdapter extends ArrayAdapter<Serie> {
             vh.textViewEmail.setText(item.volumes());
             vh.textViewEmail.setBackgroundColor(context.getColor(item.ratio() == 1.0 ? R.color.success : R.color.primary));
         }
-        Picasso.with(context).load(item.getThumbName()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(vh.imageView);
+        Picasso p = Picasso.with(context);
+        //p.setLoggingEnabled(true);
+        p.load(item.getThumbName()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(vh.imageView);
 
         return vh.rootView;
     }

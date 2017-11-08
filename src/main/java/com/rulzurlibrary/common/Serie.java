@@ -22,7 +22,7 @@ public class Serie {
 
     public String getThumbName() {
         String isbn = (this.isbn == null ? volumes.get(0).isbn : this.isbn) + ".jpg";
-        return RulzUrLibraryService.endpoint + "/thumbs/" + isbn;
+        return RulzUrLibraryService.endpoint + "thumbs/" + isbn;
     }
 
     private int owned() {
