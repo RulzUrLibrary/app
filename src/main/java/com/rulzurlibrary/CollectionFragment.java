@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.rulzurlibrary.adapters.SerieAdapter;
 import com.rulzurlibrary.common.Serie;
 import com.rulzurlibrary.common.Series;
 import com.rulzurlibrary.common.ServiceGenerator;

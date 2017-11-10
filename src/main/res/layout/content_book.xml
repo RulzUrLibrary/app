@@ -31,5 +31,19 @@
             android:textAppearance="?android:textAppearanceMedium"
             android:textColor="#acb3c2"
             tools:text="TextView" />
+
+
+        <ListView
+            android:id="@+id/bookNotations"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </ListView>
+        <TextView
+            android:id="@+id/bookDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:textAppearance="?android:textAppearanceLarge"
+            tools:text="TextView" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

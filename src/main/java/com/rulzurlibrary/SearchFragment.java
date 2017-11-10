@@ -10,11 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.rulzurlibrary.adapters.BookAdapter;
 import com.rulzurlibrary.common.Book;
 import com.rulzurlibrary.common.Books;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;

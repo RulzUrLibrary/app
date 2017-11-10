@@ -16,6 +16,7 @@ public class Book implements Parcelable {
     public boolean owned;
     public String description;
     public ArrayList<Author> authors;
+    public ArrayList<Notation> notations;
 
 
     public Book(String isbn) {
@@ -25,11 +26,12 @@ public class Book implements Parcelable {
     protected Book(Parcel in) {
         isbn = in.readString();
         title = in.readString();
-        number = in.readInt();
-        serie = in.readString();
-        owned = in.readByte() != 0;
         description = in.readString();
+        serie = in.readString();
+        number = in.readInt();
+        owned = in.readByte() != 0;
         authors = in.createTypedArrayList(Author.CREATOR);
+        notations = in.createTypedArrayList(Notation.CREATOR);
     }
 
     public static final Creator<Book> CREATOR = new Creator<Book>() {
@@ -77,5 +79,6 @@ public class Book implements Parcelable {
         parcel.writeInt(number);
         parcel.writeByte((byte) (owned ? 1 : 0));
         parcel.writeTypedList(authors);
+        parcel.writeTypedList(notations);
     }
 }

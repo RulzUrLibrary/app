@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.rulzurlibrary.adapters.BookAdapter;
 import com.rulzurlibrary.common.Book;
 import com.rulzurlibrary.common.Serie;
 import com.rulzurlibrary.common.ServiceGenerator;

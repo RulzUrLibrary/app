@@ -6,8 +6,6 @@ import android.os.Parcelable;
 public class Author implements Parcelable{
     public String name;
 
-    protected Author() {
-    }
     protected Author(Parcel in) {
         name = in.readString();
     }
@@ -15,7 +13,8 @@ public class Author implements Parcelable{
     public static final Creator<Author> CREATOR = new Creator<Author>() {
         @Override
         public Author createFromParcel(Parcel in) {
-            return new Author(in);
+            Author author = new Author(in);
+            return author;
         }
 
         @Override
