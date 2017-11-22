@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.rulzurlibrary.adapters.NotationAdapter;
 import com.rulzurlibrary.common.Author;
 import com.rulzurlibrary.common.Book;
+import com.rulzurlibrary.controllers.AddCollection;
 
 public class BookActivity extends AppCompatActivity {
     private Book book;
@@ -35,6 +37,9 @@ public class BookActivity extends AppCompatActivity {
 
         TextView description = (TextView) findViewById(R.id.bookDescription);
         description.setText(book.description);
+
+        Button addCollection = (Button) findViewById(R.id.buttonCollection);
+        addCollection.setOnClickListener(new AddCollection(book));
     }
 
     public String authors() {

@@ -45,5 +45,11 @@
             android:layout_margin="5dp"
             android:textAppearance="?android:textAppearanceLarge"
             tools:text="TextView" />
+
+        <Button
+            android:id="@+id/buttonCollection"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/add_collection" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

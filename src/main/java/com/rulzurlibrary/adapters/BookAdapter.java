@@ -18,6 +18,7 @@ import com.rulzurlibrary.R;
 import com.rulzurlibrary.RulzUrLibraryService;
 import com.rulzurlibrary.common.Book;
 import com.rulzurlibrary.common.Isbns;
+import com.rulzurlibrary.controllers.AddCollection;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -67,32 +68,8 @@ public class BookAdapter extends ArrayAdapter<Book> {
         if (book.owned) {
             vh.buttonCollection.setEnabled(false);
             vh.buttonCollection.setText(R.string.in_collection);
-
         } else {
-            vh.buttonCollection.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    // Do something in response to button click
-                    RulzUrLibraryService.client.putBook(new Isbns(book.isbn)).enqueue(new Callback<Isbns>() {
-                        @Override
-                        public void onResponse(@NonNull Call<Isbns> call, @NonNull Response<Isbns> response) {
-                            if (response.isSuccessful()) {
-                                Isbns isbns = response.body();
-                                assert isbns != null;
-                                Log.d(TAG, String.format("added: %d", isbns.added));
-                                vh.buttonCollection.setEnabled(false);
-                                vh.buttonCollection.setText(R.string.in_collection);
-                            } else {
-                                Log.e(TAG, response.toString());
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(@NonNull Call<Isbns> call, @NonNull Throwable t) {
-                            Log.e(TAG, t.toString());
-                        }
-                    });
-                }
-            });
+            vh.buttonCollection.setOnClickListener(new AddCollection(book));
         }
         Picasso p = Picasso.with(context);
         //p.setLoggingEnabled(true);
