@@ -19,4 +19,6 @@
     <string name="result_of_scan">Result of scan</string>
     <string name="no_camera_permission_granted">No Camera permission granted.</string>
     <string name="title_activity_book">BookActivity</string>
+    <string name="add_collection">Add to collection</string>
+    <string name="in_collection">In collection</string>
 </resources>

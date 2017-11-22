@@ -21,6 +21,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -39,6 +40,10 @@ public interface RulzUrLibraryService {
     @Headers({"Content-Type: application/json"})
     @POST("/books/")
     Call<Book> postIsbn(@Body Book book);
+
+    @Headers({"Content-Type: application/json"})
+    @PUT("/books/")
+    Call<Isbns> putBook(@Body Isbns isbns);
 
     @GET("/series/")
     Call<Series> getSeries();
