@@ -67,6 +67,11 @@ public class SerieFragment extends Fragment{
                     assert serie != null;
                     adapter = new BookAdapter(getContext(), serie.volumes);
                     bookList = new ArrayList<>(serie.volumes);
+
+                    // crappy but you know...
+                    for (Book book: bookList) {
+                        book.serie = serie.name;
+                    }
                     listView.setAdapter(adapter);
 
                     serieName.setText(serie.name);
