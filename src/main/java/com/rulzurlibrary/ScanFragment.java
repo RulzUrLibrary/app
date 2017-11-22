@@ -181,7 +181,7 @@ public class ScanFragment extends Fragment {
     }
 
     private class SampleFrameProcessor implements FrameProcessor {
-        RulzUrLibraryService rulzUrLibraryService = RulzUrLibraryService.retrofit.create(RulzUrLibraryService.class);
+
 
 
 
@@ -202,7 +202,7 @@ public class ScanFragment extends Fragment {
                     if (gathered.containsKey(isbn)) {
                         continue;
                     }
-                    final Call<Book> call = rulzUrLibraryService.postIsbn(new Book(isbn));
+                    final Call<Book> call = RulzUrLibraryService.client.postIsbn(new Book(isbn));
 
                     Message m = isbnHandler.obtainMessage();
                     m.obj = String.format("Scanned: %s", isbn);

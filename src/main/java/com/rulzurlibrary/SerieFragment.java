@@ -53,12 +53,7 @@ public class SerieFragment extends Fragment{
 
 		/* Inflate the layout for this fragment */
 
-        RulzUrLibraryService rulzUrLibraryService =
-                ServiceGenerator.createService(RulzUrLibraryService.class, "foo", "bar");
-        final Call<Serie> call = rulzUrLibraryService.getSerie(bundle.getInt("serieId"));
-
-
-        call.enqueue(new Callback<Serie>() {
+        RulzUrLibraryService.client.getSerie(bundle.getInt("serieId")).enqueue(new Callback<Serie>() {
             @Override
             public void onResponse(@NonNull Call<Serie> call, @NonNull Response<Serie> response) {
                 if (response.isSuccessful()) {

@@ -2,12 +2,16 @@ package com.rulzurlibrary;
 
 import com.rulzurlibrary.common.Book;
 import com.rulzurlibrary.common.Books;
+import com.rulzurlibrary.common.Isbns;
 import com.rulzurlibrary.common.Serie;
 import com.rulzurlibrary.common.Series;
+import com.rulzurlibrary.common.ServiceGenerator;
 
 import java.util.List;
 
+import okhttp3.OkHttpClient;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -22,10 +26,15 @@ import retrofit2.http.Query;
 
 public interface RulzUrLibraryService {
     String endpoint = "https://api.rulz.xyz/";
+    HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
+
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(RulzUrLibraryService.endpoint)
+            .client(new OkHttpClient.Builder().addInterceptor(interceptor).build())
             .addConverterFactory(GsonConverterFactory.create())
             .build();
+
+    RulzUrLibraryService client = ServiceGenerator.createService(RulzUrLibraryService.class, "foo", "bar");
 
     @Headers({"Content-Type: application/json"})
     @POST("/books/")

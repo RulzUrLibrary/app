@@ -57,12 +57,8 @@ public class CollectionFragment extends Fragment {
 
 		/* Inflate the layout for this fragment */
 
-        RulzUrLibraryService rulzUrLibraryService =
-                ServiceGenerator.createService(RulzUrLibraryService.class, "foo", "bar");
-        final Call<Series> call = rulzUrLibraryService.getSeries();
 
-
-        call.enqueue(new Callback<Series>() {
+        RulzUrLibraryService.client.getSeries().enqueue(new Callback<Series>() {
             @Override
             public void onResponse(@NonNull Call<Series> call, @NonNull Response<Series> response) {
                 if (response.isSuccessful()) {
