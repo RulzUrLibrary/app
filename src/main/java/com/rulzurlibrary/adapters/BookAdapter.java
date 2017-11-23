@@ -64,13 +64,8 @@ public class BookAdapter extends ArrayAdapter<Book> {
 
         assert book != null;
         vh.textViewName.setText(book.title());
+        vh.addCollection.setBook(book);
 
-        if (book.owned) {
-            vh.buttonCollection.setEnabled(false);
-            vh.buttonCollection.setText(R.string.in_collection);
-        } else {
-            vh.buttonCollection.setOnClickListener(new AddCollection(book));
-        }
         Picasso p = Picasso.with(context);
         //p.setLoggingEnabled(true);
         p.load(book.getThumbName()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(vh.imageView);
@@ -82,20 +77,20 @@ public class BookAdapter extends ArrayAdapter<Book> {
         final RelativeLayout rootView;
         final ImageView imageView;
         final TextView textViewName;
-        final Button buttonCollection;
+        final AddCollection addCollection;
 
-        private ViewHolder(RelativeLayout rootView, ImageView imageView, TextView textViewName, Button buttonCollection) {
+        private ViewHolder(RelativeLayout rootView, ImageView imageView, TextView textViewName, AddCollection addCollection) {
             this.rootView = rootView;
             this.imageView = imageView;
             this.textViewName = textViewName;
-            this.buttonCollection = buttonCollection;
+            this.addCollection = addCollection;
         }
 
         static BookAdapter.ViewHolder create(RelativeLayout rootView) {
             ImageView imageView = rootView.findViewById(R.id.imageView);
             TextView textViewName = rootView.findViewById(R.id.textViewName);
-            Button buttonCollection = rootView.findViewById(R.id.buttonCollection);
-            return new BookAdapter.ViewHolder(rootView, imageView, textViewName, buttonCollection);
+            AddCollection addCollection = rootView.findViewById(R.id.buttonCollection);
+            return new BookAdapter.ViewHolder(rootView, imageView, textViewName, addCollection);
         }
     }
 }

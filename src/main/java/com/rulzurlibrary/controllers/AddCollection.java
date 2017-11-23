@@ -1,9 +1,10 @@
 package com.rulzurlibrary.controllers;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
 import com.rulzurlibrary.R;
 import com.rulzurlibrary.RulzUrLibraryService;
@@ -15,17 +16,32 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class AddCollection implements View.OnClickListener {
+public class AddCollection extends android.support.v7.widget.AppCompatButton implements View.OnClickListener  {
     private final String TAG = "AddCollection";
     private Book book;
+    
+    public AddCollection(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        this.setText(R.string.add_collection);
+        this.setOnClickListener(this);
+    }
 
-    public AddCollection(Book book) {
+
+    public void setBook(Book book) {
         this.book = book;
+        setOwned(book.owned);
+    }
+
+    private void setOwned(boolean owned) {
+        book.owned = owned;
+        if (owned) {
+            setEnabled(false);
+            setText(R.string.in_collection);
+        }
     }
 
     @Override
     public void onClick(View view) {
-        final Button button = (Button) view;
         // Do something in response to button click
         RulzUrLibraryService.client.putBook(new Isbns(book.isbn)).enqueue(new Callback<Isbns>() {
             @Override
@@ -34,8 +50,7 @@ public class AddCollection implements View.OnClickListener {
                     Isbns isbns = response.body();
                     assert isbns != null;
                     Log.d(TAG, String.format("added: %d", isbns.added));
-                    button.setEnabled(false);
-                    button.setText(R.string.in_collection);
+                    setOwned(true);
                 } else {
                     Log.e(TAG, response.toString());
                 }

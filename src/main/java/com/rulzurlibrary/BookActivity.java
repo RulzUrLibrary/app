@@ -38,8 +38,9 @@ public class BookActivity extends AppCompatActivity {
         TextView description = (TextView) findViewById(R.id.bookDescription);
         description.setText(book.description);
 
-        Button addCollection = (Button) findViewById(R.id.buttonCollection);
-        addCollection.setOnClickListener(new AddCollection(book));
+        AddCollection addCollection = (AddCollection) findViewById(R.id.buttonCollection);
+        addCollection.setBook(book);
+
     }
 
     public String authors() {
