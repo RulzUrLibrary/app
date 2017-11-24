@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.rulzurlibrary.R;
 import com.rulzurlibrary.adapters.NotationAdapter;
 import com.rulzurlibrary.common.Author;
 import com.rulzurlibrary.common.Book;

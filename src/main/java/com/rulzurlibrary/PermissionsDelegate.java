@@ -7,16 +7,16 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 
-class PermissionsDelegate {
+public class PermissionsDelegate {
 
     private static final int REQUEST_CODE = 10;
     private final Activity activity;
 
-    PermissionsDelegate(Activity activity) {
+    public PermissionsDelegate(Activity activity) {
         this.activity = activity;
     }
 
-    boolean hasCameraPermission() {
+    public boolean hasCameraPermission() {
         int permissionCheckResult = ContextCompat.checkSelfPermission(
                 activity,
                 Manifest.permission.CAMERA
@@ -24,7 +24,7 @@ class PermissionsDelegate {
         return permissionCheckResult == PackageManager.PERMISSION_GRANTED;
     }
 
-    void requestCameraPermission() {
+    public void requestCameraPermission() {
         ActivityCompat.requestPermissions(
                 activity,
                 new String[]{Manifest.permission.CAMERA},
@@ -32,7 +32,7 @@ class PermissionsDelegate {
         );
     }
 
-    boolean resultGranted(int requestCode,
+    public boolean resultGranted(int requestCode,
                           String[] permissions,
                           int[] grantResults) {
 

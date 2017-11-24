@@ -2,9 +2,6 @@ package com.rulzurlibrary.common;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.os.ParcelableCompat;
-
-import com.rulzurlibrary.RulzUrLibraryService;
 
 import java.util.ArrayList;
 

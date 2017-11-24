@@ -1,4 +1,4 @@
-package com.rulzurlibrary;
+package com.rulzurlibrary.fragments;
 
 /**
  * Created by max on 8/28/17.
@@ -20,7 +20,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rulzurlibrary.BookActivity;
+import com.rulzurlibrary.PermissionsDelegate;
+import com.rulzurlibrary.R;
 import com.rulzurlibrary.common.Book;
+import com.rulzurlibrary.common.RulzUrLibraryService;
 
 import net.sourceforge.zbar.Config;
 import net.sourceforge.zbar.Image;

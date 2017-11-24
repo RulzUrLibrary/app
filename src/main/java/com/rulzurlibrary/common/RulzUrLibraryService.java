@@ -1,11 +1,4 @@
-package com.rulzurlibrary;
-
-import com.rulzurlibrary.common.Book;
-import com.rulzurlibrary.common.Books;
-import com.rulzurlibrary.common.Isbns;
-import com.rulzurlibrary.common.Serie;
-import com.rulzurlibrary.common.Series;
-import com.rulzurlibrary.common.ServiceGenerator;
+package com.rulzurlibrary.common;
 
 
 import okhttp3.OkHttpClient;

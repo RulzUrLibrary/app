@@ -21,6 +21,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.rulzurlibrary.fragments.CollectionFragment;
 import com.rulzurlibrary.common.User;
 
 public class Signin extends Fragment {

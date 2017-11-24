@@ -1,7 +1,5 @@
 package com.rulzurlibrary.common;
 
-import com.rulzurlibrary.RulzUrLibraryService;
-
 import java.util.ArrayList;
 
 public class Serie {

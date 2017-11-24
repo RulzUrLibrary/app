@@ -4,28 +4,20 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.rulzurlibrary.R;
-import com.rulzurlibrary.RulzUrLibraryService;
 import com.rulzurlibrary.common.Book;
-import com.rulzurlibrary.common.Isbns;
 import com.rulzurlibrary.controllers.AddCollection;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class BookAdapter extends ArrayAdapter<Book> {
 

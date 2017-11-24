@@ -7,7 +7,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.rulzurlibrary.R;
-import com.rulzurlibrary.RulzUrLibraryService;
+import com.rulzurlibrary.common.RulzUrLibraryService;
 import com.rulzurlibrary.common.Book;
 import com.rulzurlibrary.common.Isbns;
 
@@ -19,7 +19,7 @@ import retrofit2.Response;
 public class AddCollection extends android.support.v7.widget.AppCompatButton implements View.OnClickListener  {
     private final String TAG = "AddCollection";
     private Book book;
-    
+
     public AddCollection(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.setText(R.string.add_collection);

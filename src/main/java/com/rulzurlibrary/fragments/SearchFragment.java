@@ -1,4 +1,4 @@
-package com.rulzurlibrary;
+package com.rulzurlibrary.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,9 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.rulzurlibrary.R;
 import com.rulzurlibrary.adapters.BookAdapter;
 import com.rulzurlibrary.common.Book;
 import com.rulzurlibrary.common.Books;
+import com.rulzurlibrary.common.RulzUrLibraryService;
 
 import java.util.ArrayList;
 
