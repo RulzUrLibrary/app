@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
         }
 
         assert book != null;
+        Log.d(TAG, book.title());
         vh.textViewName.setText(book.title());
         vh.addCollection.setBook(book);
 

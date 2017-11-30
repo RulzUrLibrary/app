@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,7 @@ import com.rulzurlibrary.common.Wishlist;
 import java.util.List;
 
 public class WishlistAdapter extends ArrayAdapter<Wishlist> {
-
+    private final String TAG = "WishlistAdapter";
     private List<Wishlist> wishlistList;
     private LayoutInflater mInflater;
 
@@ -48,6 +49,7 @@ public class WishlistAdapter extends ArrayAdapter<Wishlist> {
         Wishlist item = getItem(position);
 
         assert item != null;
+        Log.d(TAG, item.name);
         vh.textViewName.setText(item.name);
         return vh.rootView;
     }
