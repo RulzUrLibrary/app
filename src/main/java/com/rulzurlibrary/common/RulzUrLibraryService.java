@@ -34,6 +34,9 @@ public interface RulzUrLibraryService {
     @PUT("/books/")
     Call<Isbns> putBook(@Body Isbns isbns);
 
+    @GET("/wishlists/")
+    Call<Wishlists> getWishlists();
+
     @GET("/series/")
     Call<Series> getSeries();
 
