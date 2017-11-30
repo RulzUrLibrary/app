@@ -8,15 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 
 import com.rulzurlibrary.R;
 import com.rulzurlibrary.adapters.WishlistAdapter;
 import com.rulzurlibrary.common.RulzUrLibraryService;
-import com.rulzurlibrary.common.Wishlist;
 import com.rulzurlibrary.common.Wishlists;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,9 +21,7 @@ import retrofit2.Response;
 
 public class WishlistFragment extends Fragment {
     private final String TAG = "WishlistFragment";
-    private List<Wishlist> bookList;
-    private WishlistAdapter adapter;
-    private ListView listView;
+    private ExpandableListView expandableListView;
 
 
     @Override
@@ -38,7 +33,7 @@ public class WishlistFragment extends Fragment {
          */
         final View view = inflater.inflate(R.layout.wishlist_fragment, container, false);
 
-        listView = view.findViewById(R.id.listView);
+        expandableListView = view.findViewById(R.id.wishlists);
 
         RulzUrLibraryService.client.getWishlists().enqueue(new Callback<Wishlists>() {
             @Override
@@ -48,9 +43,7 @@ public class WishlistFragment extends Fragment {
                     Wishlists wishlists = response.body();
                     assert wishlists != null;
                     try {
-                        adapter = new WishlistAdapter(getContext(), wishlists.wishlists);
-
-                        listView.setAdapter(adapter);
+                        expandableListView.setAdapter(new WishlistAdapter(getContext(), wishlists.wishlists));
                     } catch (NullPointerException e) {
                         Log.e(TAG, e.toString());
                     }

@@ -1,72 +1,91 @@
 package com.rulzurlibrary.adapters;
 
 import android.content.Context;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.RelativeLayout;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.rulzurlibrary.R;
+import com.rulzurlibrary.common.Book;
 import com.rulzurlibrary.common.Wishlist;
 
 import java.util.List;
 
-public class WishlistAdapter extends ArrayAdapter<Wishlist> {
+public class WishlistAdapter extends BaseExpandableListAdapter {
     private final String TAG = "WishlistAdapter";
-    private List<Wishlist> wishlistList;
+    private List<Wishlist> wishlists;
     private LayoutInflater mInflater;
 
     public WishlistAdapter(Context context, List<Wishlist> wishlists) {
-        super(context, 0, wishlists);
         this.mInflater = LayoutInflater.from(context);
-        this.wishlistList = wishlists;
+        this.wishlists = wishlists;
     }
 
     @Override
-    public Wishlist getItem(int position) {
-        return wishlistList.get(position);
+    public int getGroupCount() {
+        return wishlists.size();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    @NonNull
     @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        final ViewHolder vh;
-        if (convertView == null) {
-            View view = mInflater.inflate(R.layout.wishlist_layout, parent, false);
-            vh = ViewHolder.create((RelativeLayout) view);
-            view.setTag(vh);
-        } else {
-            vh = (ViewHolder) convertView.getTag();
-        }
-
-        Wishlist item = getItem(position);
-
-        assert item != null;
-        Log.d(TAG, item.name);
-        vh.textViewName.setText(item.name);
-        return vh.rootView;
+    public int getChildrenCount(int i) {
+        return wishlists.get(i).books.size();
     }
 
-    private static class ViewHolder {
-        final RelativeLayout rootView;
-        final TextView textViewName;
-
-        private ViewHolder(RelativeLayout rootView, TextView textViewName) {
-            this.rootView = rootView;
-            this.textViewName = textViewName;
-        }
-
-        static ViewHolder create(RelativeLayout rootView) {
-            TextView textViewName = rootView.findViewById(R.id.wishlistName);
-            return new ViewHolder(rootView, textViewName);
-        }
+    @Override
+    public Object getGroup(int i) {
+        return wishlists.get(i);
     }
 
+    @Override
+    public Object getChild(int i, int j) {
+        return wishlists.get(i).books.get(j);
+    }
+
+    @Override
+    public long getGroupId(int i) {
+        return i;
+    }
+
+    @Override
+    public long getChildId(int i, int j) {
+        return j;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
+    }
+
+    @Override
+    public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
+        if (view == null) {
+            view = mInflater.inflate(R.layout.wishlist_layout, viewGroup, false);
+        }
+        TextView wishlistName = view.findViewById(R.id.wishlistName);
+        wishlistName.setTypeface(null, Typeface.BOLD);
+        wishlistName.setText(wishlists.get(i).name);
+        return view;
+    }
+
+    @Override
+    public View getChildView(int i, int j, boolean b, View view, ViewGroup viewGroup) {
+        if (view == null) {
+            view = mInflater.inflate(R.layout.book_partial_layout, viewGroup, false);
+        }
+        Wishlist wishlist = wishlists.get(i);
+        Book book = wishlist.books.get(j);
+        Log.d(TAG, String.format("%s: %s", wishlist.name, book.title()));
+        TextView bookName = view.findViewById(R.id.bookName);
+        bookName.setText(book.title());
+        return view;
+    }
+
+    @Override
+    public boolean isChildSelectable(int i, int i1) {
+        return true;
+    }
 }
