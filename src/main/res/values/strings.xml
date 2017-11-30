@@ -21,4 +21,6 @@
     <string name="title_activity_book">BookActivity</string>
     <string name="add_collection">Add to collection</string>
     <string name="in_collection">In collection</string>
+    <string name="add_wishlist">Add to wishlist</string>
+    <string name="book_cover">Book cover</string>
 </resources>

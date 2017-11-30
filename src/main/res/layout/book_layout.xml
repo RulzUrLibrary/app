@@ -10,14 +10,16 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_margin="5dp"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@mipmap/ic_launcher"
+        android:contentDescription="@string/book_cover" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/imageView"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_toEndOf="@+id/imageView"
+        android:layout_toRightOf="@+id/imageView">
 
         <TextView
             android:id="@+id/textViewName"
@@ -29,6 +31,11 @@
 
         <com.rulzurlibrary.controllers.AddCollection
             android:id="@+id/buttonCollection"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+
+        <com.rulzurlibrary.controllers.AddWishlist
+            android:id="@+id/buttonWishlist"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content" />
 
