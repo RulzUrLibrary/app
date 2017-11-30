@@ -12,6 +12,7 @@ import android.view.Menu;
 
 import com.rulzurlibrary.fragments.ScanFragment;
 import com.rulzurlibrary.fragments.SearchFragment;
+import com.rulzurlibrary.fragments.WishlistFragment;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Scan"));
         tabLayout.addTab(tabLayout.newTab().setText("Search"));
         tabLayout.addTab(tabLayout.newTab().setText("Collection"));
+        tabLayout.addTab(tabLayout.newTab().setText("Wishlist"));
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
@@ -77,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
                     return new SearchFragment();
                 case 2:
                     return new Signin();
+                case 3:
+                    return new WishlistFragment();
                 default:
                     return null;
             }
