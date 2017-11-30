@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Scan"));
         tabLayout.addTab(tabLayout.newTab().setText("Search"));
-        tabLayout.addTab(tabLayout.newTab().setText("Collection"));
+        tabLayout.addTab(tabLayout.newTab().setText("Books"));
         tabLayout.addTab(tabLayout.newTab().setText("Wishlist"));
 
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
