@@ -8,9 +8,11 @@ import android.view.View;
 
 import com.rulzurlibrary.R;
 import com.rulzurlibrary.WishlistActivity;
+import com.rulzurlibrary.common.Book;
 
 public class AddWishlist extends android.support.v7.widget.AppCompatButton implements View.OnClickListener  {
     private final String TAG = "AddWishlist";
+    private Book book;
 
     public AddWishlist(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -19,11 +21,16 @@ public class AddWishlist extends android.support.v7.widget.AppCompatButton imple
     }
 
 
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
     @Override
     public void onClick(View view) {
         // Do something in response to button click
         Log.d(TAG, "launching wishlist activity");
         Intent intent = new Intent(getContext(), WishlistActivity.class);
+        intent.putExtra("book", book);
         getContext().startActivity(intent);
     }
 }

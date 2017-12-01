@@ -72,18 +72,15 @@ public class SerieAdapter extends ArrayAdapter<Serie> {
         final TextView textViewName;
         final TextView textViewEmail;
 
-        private ViewHolder(RelativeLayout rootView, ImageView imageView, TextView textViewName, TextView textViewEmail) {
+        private ViewHolder(RelativeLayout rootView) {
             this.rootView = rootView;
-            this.imageView = imageView;
-            this.textViewName = textViewName;
-            this.textViewEmail = textViewEmail;
+            this.imageView = rootView.findViewById(R.id.imageView);
+            this.textViewName = rootView.findViewById(R.id.textViewName);
+            this.textViewEmail = rootView.findViewById(R.id.textViewEmail);
         }
 
         static ViewHolder create(RelativeLayout rootView) {
-            ImageView imageView = rootView.findViewById(R.id.imageView);
-            TextView textViewName = rootView.findViewById(R.id.textViewName);
-            TextView textViewEmail = rootView.findViewById(R.id.textViewEmail);
-            return new ViewHolder(rootView, imageView, textViewName, textViewEmail);
+            return new ViewHolder(rootView);
         }
     }
 }

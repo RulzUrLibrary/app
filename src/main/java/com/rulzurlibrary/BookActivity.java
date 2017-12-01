@@ -1,6 +1,7 @@
 package com.rulzurlibrary;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -21,9 +22,7 @@ public class BookActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setActionBar();
 
         book = getIntent().getParcelableExtra("book");
 
@@ -42,6 +41,14 @@ public class BookActivity extends AppCompatActivity {
         AddCollection addCollection = (AddCollection) findViewById(R.id.buttonCollection);
         addCollection.setBook(book);
 
+    }
+
+    public void setActionBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar bar = getSupportActionBar();
+        assert bar != null;
+        bar.setDisplayHomeAsUpEnabled(true);
     }
 
     public String authors() {

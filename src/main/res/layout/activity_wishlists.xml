@@ -36,5 +36,12 @@
             android:textAppearance="?android:textAppearanceLarge"
             tools:text="TextView" />
 
+        <ListView
+        android:id="@+id/wishlistsCheckboxes"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
