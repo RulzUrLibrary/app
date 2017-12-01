@@ -13,32 +13,43 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.rulzurlibrary.BookActivity;
 import com.rulzurlibrary.R;
 import com.rulzurlibrary.common.Book;
+import com.rulzurlibrary.common.Serie;
 import com.rulzurlibrary.controllers.AddCollection;
 import com.rulzurlibrary.controllers.AddWishlist;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+
 public class BookAdapter extends ArrayAdapter<Book> {
 
     private final String TAG = "BookAdapter";
-    private List<Book> bookList;
+    private Serie serie;
     private Context context;
     private LayoutInflater mInflater;
 
     // Constructors
+    public BookAdapter(Context context, Serie serie) {
+        super(context, 0, serie.volumes);
+        this.serie = serie;
+        this.context = context;
+        this.mInflater = LayoutInflater.from(context);
+    }
+
     public BookAdapter(Context context, List<Book> objects) {
         super(context, 0, objects);
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
-        bookList = objects;
     }
 
     @Override
     public Book getItem(int position) {
-        return bookList.get(position);
+        Book book = serie.volumes.get(position);
+        if (this.serie != null ) { book.serie = serie.name; }
+        return book;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -58,6 +69,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
 
         assert book != null;
         Log.d(TAG, book.title());
+
         vh.textViewName.setText(book.title());
         vh.addCollection.setBook(book);
         vh.addWishlist.setBook(book);

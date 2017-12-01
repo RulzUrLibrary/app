@@ -13,19 +13,15 @@ import android.widget.TextView;
 
 import com.rulzurlibrary.R;
 import com.rulzurlibrary.adapters.BookAdapter;
-import com.rulzurlibrary.common.Book;
 import com.rulzurlibrary.common.RulzUrLibraryService;
 import com.rulzurlibrary.common.Serie;
 
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SerieFragment extends Fragment{
-    private ArrayList<Book> bookList;
-    private BookAdapter adapter;
     private ListView listView;
     TextView serieName;
     TextView serieAuthors;
@@ -61,14 +57,7 @@ public class SerieFragment extends Fragment{
                     // user object available
                     Serie serie = response.body();
                     assert serie != null;
-                    adapter = new BookAdapter(getContext(), serie.volumes);
-                    bookList = new ArrayList<>(serie.volumes);
-
-                    // crappy but you know...
-                    for (Book book: bookList) {
-                        book.serie = serie.name;
-                    }
-                    listView.setAdapter(adapter);
+                    listView.setAdapter(new BookAdapter(getContext(), serie));
 
                     serieName.setText(serie.name);
                     serieAuthors.setText(serie.authors());
