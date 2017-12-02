@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.rulzurlibrary.BookActivity;
 import com.rulzurlibrary.R;
 import com.rulzurlibrary.common.Book;
 import com.rulzurlibrary.common.Serie;
@@ -28,26 +27,26 @@ public class BookAdapter extends ArrayAdapter<Book> {
 
     private final String TAG = "BookAdapter";
     private Serie serie;
+    private List<Book> books;
     private Context context;
     private LayoutInflater mInflater;
 
     // Constructors
     public BookAdapter(Context context, Serie serie) {
-        super(context, 0, serie.volumes);
+        this(context, serie.volumes);
         this.serie = serie;
-        this.context = context;
-        this.mInflater = LayoutInflater.from(context);
     }
 
     public BookAdapter(Context context, List<Book> objects) {
         super(context, 0, objects);
+        this.books = objects;
         this.context = context;
         this.mInflater = LayoutInflater.from(context);
     }
 
     @Override
     public Book getItem(int position) {
-        Book book = serie.volumes.get(position);
+        Book book = books.get(position);
         if (this.serie != null ) { book.serie = serie.name; }
         return book;
     }

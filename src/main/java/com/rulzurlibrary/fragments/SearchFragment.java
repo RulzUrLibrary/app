@@ -26,7 +26,6 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     RulzUrLibraryService rulzUrLibraryService = RulzUrLibraryService.retrofit.create(RulzUrLibraryService.class);
     private static final String TAG = "SearchFragment";
 
-    private ArrayList<Book> bookList;
     private BookAdapter adapter;
     private ListView listView;
 
@@ -50,9 +49,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
                     // user object available
                     Books books = response.body();
                     assert books != null;
-                    adapter = new BookAdapter(getContext(), books.books);
-                    bookList = new ArrayList<>(books.books);
-                    listView.setAdapter(adapter);
+                    listView.setAdapter(new BookAdapter(getContext(), books.books));
                 } else {
                     Log.d(TAG, response.toString());
                     // error response, no access to resource?
