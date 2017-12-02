@@ -20,8 +20,7 @@
             android:name="firebase_analytics_collection_deactivated"
             android:value="true" />
         <activity
-            android:name=".MainActivity"
-            android:screenOrientation="fullSensor">
+            android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
