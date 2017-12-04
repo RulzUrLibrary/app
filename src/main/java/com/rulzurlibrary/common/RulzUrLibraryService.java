@@ -45,4 +45,7 @@ public interface RulzUrLibraryService {
 
     @GET("/books/")
     Call<Books> search(@Query("search") String pattern);
+
+    @GET("/books/{isbn}")
+    Call<Book> getBook(@Path("isbn") String pattern);
 }

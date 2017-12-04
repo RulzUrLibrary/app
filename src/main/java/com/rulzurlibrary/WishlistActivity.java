@@ -16,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.rulzurlibrary.common.Book;
 import com.rulzurlibrary.common.RulzUrLibraryService;
@@ -35,6 +34,14 @@ public class WishlistActivity extends AppCompatActivity {
     private ListView wishlistsCheckboxes;
     private Book book;
 
+
+    private void setAdapter() {
+        if (wishlists != null && book.wishlists != null) {
+            wishlistsCheckboxes.setAdapter(new WishlistActivity.WishlistAdapter(
+                    WishlistActivity.this, wishlists.wishlists
+            ));
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,15 +51,31 @@ public class WishlistActivity extends AppCompatActivity {
         book = getIntent().getParcelableExtra("book");
         wishlistsCheckboxes = (ListView) findViewById(R.id.wishlistsCheckboxes);
 
+        RulzUrLibraryService.client.getBook(book.isbn).enqueue(new Callback<Book>() {
+            @Override
+            public void onResponse(Call<Book> call, Response<Book> response) {
+                if (response.isSuccessful()) {
+                    book = response.body();
+                    setAdapter();
+                } else {
+                    Log.e(TAG, response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Book> call, Throwable t) {
+                Log.e(TAG, t.getMessage());
+            }
+        });
+
+
         RulzUrLibraryService.client.getWishlists().enqueue(new Callback<Wishlists>() {
             @Override
             public void onResponse(@NonNull Call<Wishlists> call, @NonNull Response<Wishlists> response) {
                 if (response.isSuccessful()) {
                     // user object available
                     wishlists = response.body();
-                    wishlistsCheckboxes.setAdapter(
-                            new WishlistActivity.WishlistAdapter(WishlistActivity.this, wishlists.wishlists)
-                    );
+                    setAdapter();
                 } else {
                     Log.e(TAG, response.toString());
                     // error response, no access to resource?
@@ -109,6 +132,7 @@ public class WishlistActivity extends AppCompatActivity {
 
             assert item != null;
             vh.wishlistCheckBox.setText(item.name);
+            vh.wishlistCheckBox.setChecked(book.isInWishlist(item));
             return vh.rootView;
         }
     }
