@@ -3,8 +3,6 @@ package com.rulzurlibrary.common;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Book implements Parcelable {
@@ -17,8 +15,6 @@ public class Book implements Parcelable {
     public List<Author> authors;
     public List<Notation> notations;
     public List<Wishlist> wishlists;
-
-    private HashMap<String, Wishlist> mWishlists;
 
 
     public Book(String isbn) {
@@ -65,18 +61,6 @@ public class Book implements Parcelable {
 
     public String getThumbName() {
         return RulzUrLibraryService.endpoint + "thumbs/" + this.isbn + ".jpg";
-    }
-
-    private void buildMWishlist() {
-        mWishlists = new HashMap<>();
-        for (Wishlist wishlist: wishlists) {
-            mWishlists.put(wishlist.uuid, wishlist);
-        }
-    }
-
-    public boolean isInWishlist(Wishlist wishlist) {
-        if (mWishlists == null) { buildMWishlist(); }
-        return mWishlists.containsKey(wishlist.uuid);
     }
 
     @Override

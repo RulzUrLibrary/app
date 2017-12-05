@@ -1,8 +1,5 @@
 package com.rulzurlibrary.fragments;
 
-/**
- * Created by max on 8/28/17.
- */
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -185,9 +182,6 @@ public class ScanFragment extends Fragment {
     }
 
     private class SampleFrameProcessor implements FrameProcessor {
-
-
-
 
         @Override
         public void processFrame(Frame frame) {

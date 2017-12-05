@@ -1,6 +1,8 @@
 package com.rulzurlibrary.common;
 
 
+import java.util.List;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -47,5 +49,9 @@ public interface RulzUrLibraryService {
     Call<Books> search(@Query("search") String pattern);
 
     @GET("/books/{isbn}")
-    Call<Book> getBook(@Path("isbn") String pattern);
+    Call<Book> getBook(@Path("isbn") String isbn);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("/books/{isbn}/wishlists/")
+    Call<Void> postWishlists(@Path("isbn") String isbn, @Body Wishlists.Post wishlists);
 }

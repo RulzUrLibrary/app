@@ -13,15 +13,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.rulzurlibrary.common.Book;
 import com.rulzurlibrary.common.RulzUrLibraryService;
 import com.rulzurlibrary.common.Wishlist;
 import com.rulzurlibrary.common.Wishlists;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -31,12 +36,17 @@ import retrofit2.Response;
 public class WishlistActivity extends AppCompatActivity {
     private final String TAG = "WishlistActivity";
     private Wishlists wishlists;
+    private HashMap<String, Wishlist> selected;
+    private Button wishlistsSubmit;
     private ListView wishlistsCheckboxes;
     private Book book;
 
 
     private void setAdapter() {
         if (wishlists != null && book.wishlists != null) {
+            for (Wishlist wishlist: book.wishlists) {
+                selected.put(wishlist.uuid, wishlist);
+            }
             wishlistsCheckboxes.setAdapter(new WishlistActivity.WishlistAdapter(
                     WishlistActivity.this, wishlists.wishlists
             ));
@@ -48,8 +58,12 @@ public class WishlistActivity extends AppCompatActivity {
         setContentView(R.layout.activity_wishlists);
         setActionBar();
 
+        selected = new HashMap<>();
         book = getIntent().getParcelableExtra("book");
         wishlistsCheckboxes = (ListView) findViewById(R.id.wishlistsCheckboxes);
+        wishlistsSubmit = (Button) findViewById(R.id.wishlistsSubmit);
+
+        wishlistsSubmit.setOnClickListener(new WishlistSubmit());
 
         RulzUrLibraryService.client.getBook(book.isbn).enqueue(new Callback<Book>() {
             @Override
@@ -132,8 +146,49 @@ public class WishlistActivity extends AppCompatActivity {
 
             assert item != null;
             vh.wishlistCheckBox.setText(item.name);
-            vh.wishlistCheckBox.setChecked(book.isInWishlist(item));
+            vh.wishlistCheckBox.setChecked(selected.containsKey(item.uuid));
+            vh.wishlistCheckBox.setOnClickListener(new WishlistCheckedChangeListener(item));
             return vh.rootView;
+        }
+    }
+
+    private class WishlistCheckedChangeListener implements View.OnClickListener {
+        private Wishlist wishlist;
+
+        WishlistCheckedChangeListener(Wishlist wishlist) { this.wishlist = wishlist; }
+
+        @Override
+        public void onClick(View v) {
+            if (selected.containsKey(wishlist.uuid)) {
+                selected.remove(wishlist.uuid);
+            } else {
+                selected.put(wishlist.uuid, wishlist);
+            }
+        }
+    }
+
+    private class WishlistSubmit implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            RulzUrLibraryService.client.postWishlists(
+                    book.isbn, new Wishlists.Post(new ArrayList<>(selected.keySet()))
+            ).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call call, Response response) {
+                    if (response.isSuccessful() && response.code() == 204) {
+                        Toast.makeText(WishlistActivity.this, "Wishlists updated", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(WishlistActivity.this, "Ooops something failed", Toast.LENGTH_LONG).show();
+                        Log.e(TAG, response.toString());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call call, Throwable t) {
+                    Log.e(TAG, t.getMessage());
+                }
+            });
         }
     }
 
