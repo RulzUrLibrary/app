@@ -16,6 +16,7 @@ import com.rulzurlibrary.common.Author;
 import com.rulzurlibrary.common.Book;
 import com.rulzurlibrary.common.RulzUrLibraryService;
 import com.rulzurlibrary.controllers.AddCollection;
+import com.rulzurlibrary.controllers.AddWishlist;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,6 +31,7 @@ public class BookActivity extends AppCompatActivity {
     private TextView description;
     private ListView notations;
     private AddCollection addCollection;
+    private AddWishlist addWishlist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class BookActivity extends AppCompatActivity {
         this.notations = (ListView) findViewById(R.id.bookNotations);
         this.description = (TextView) findViewById(R.id.bookDescription);
         this.addCollection = (AddCollection) findViewById(R.id.buttonCollection);
+        this.addWishlist = (AddWishlist) findViewById(R.id.buttonWishlist);
 
 
         Intent intent = getIntent();
@@ -77,6 +80,7 @@ public class BookActivity extends AppCompatActivity {
         this.description.setText(book.description);
         this.notations.setAdapter(new NotationAdapter(this, book.notations));
         this.addCollection.setBook(book);
+        this.addWishlist.setBook(book);
     }
 
     public void setActionBar() {
