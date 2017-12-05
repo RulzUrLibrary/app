@@ -35,6 +35,13 @@
                 android:value="com.rulzurlibrary.MainActivity" />
         </activity>
         <activity
+            android:name=".SerieActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.rulzurlibrary.MainActivity" />
+        </activity>
+        <activity
             android:name=".WishlistActivity"
             android:theme="@style/AppTheme">
             <meta-data

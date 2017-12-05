@@ -1,5 +1,7 @@
 package com.rulzurlibrary.fragments;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.rulzurlibrary.R;
+import com.rulzurlibrary.SerieActivity;
 import com.rulzurlibrary.adapters.SerieAdapter;
 import com.rulzurlibrary.common.RulzUrLibraryService;
 import com.rulzurlibrary.common.Serie;
@@ -25,39 +28,20 @@ import retrofit2.Response;
 
 public class CollectionFragment extends Fragment {
 
+    private final String TAG = "CollectionFragment";
     private ArrayList<Serie> serieList;
     private SerieAdapter adapter;
     private ListView listView;
+    private Context context;
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        /**
-         * Array List for Binding Data from JSON to this List
-         */
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.collection_fragment, container, false);
 
-
+        context = getContext();
         listView = view.findViewById(R.id.listView);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                FragmentTransaction trans = getFragmentManager().beginTransaction();
-                Fragment fragment = new SerieFragment();
-                Bundle bundle = new Bundle();
-                bundle.putInt("serieId", serieList.get(position).id);
-                fragment.setArguments(bundle);
-                trans.replace(R.id.root_frame, fragment);
-                trans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                trans.addToBackStack(null);
-                trans.commit();
-            }
-        });
-
-		/* Inflate the layout for this fragment */
-
+        listView.setOnItemClickListener(new SerieClickListener());
 
         RulzUrLibraryService.client.getSeries().enqueue(new Callback<Series>() {
             @Override
@@ -67,7 +51,7 @@ public class CollectionFragment extends Fragment {
                     Series series = response.body();
                     assert series != null;
                     try {
-                        adapter = new SerieAdapter(getContext(), series.series);
+                        adapter = new SerieAdapter(context, series.series);
                         serieList = new ArrayList<>(series.series);
                         listView.setAdapter(adapter);
                     } catch (NullPointerException e) {
@@ -84,7 +68,6 @@ public class CollectionFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<Series> call, @NonNull Throwable t) {
-                // something went completely south (like no internet connection)
                 Log.d("Error", t.getMessage());
             }
         });
@@ -93,5 +76,14 @@ public class CollectionFragment extends Fragment {
         return view;
     }
 
+    private class SerieClickListener implements AdapterView.OnItemClickListener {
 
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Log.d(TAG, String.format("launching serie activity at position: %d", position));
+            Intent intent = new Intent(context, SerieActivity.class);
+            intent.putExtra("serie", serieList.get(position).id);
+            context.startActivity(intent);
+        }
+    }
 }
