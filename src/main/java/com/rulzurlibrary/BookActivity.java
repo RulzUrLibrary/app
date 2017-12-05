@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import com.rulzurlibrary.common.Book;
 import com.rulzurlibrary.common.RulzUrLibraryService;
 import com.rulzurlibrary.controllers.AddCollection;
 import com.rulzurlibrary.controllers.AddWishlist;
+import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,8 +32,11 @@ public class BookActivity extends AppCompatActivity {
     private TextView authors;
     private TextView description;
     private ListView notations;
+    private ImageView thumbnail;
     private AddCollection addCollection;
     private AddWishlist addWishlist;
+
+    private Picasso picasso;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +47,12 @@ public class BookActivity extends AppCompatActivity {
 
         this.title = (TextView) findViewById(R.id.bookName);
         this.authors = (TextView) findViewById(R.id.bookAuthors);
-        this.notations = (ListView) findViewById(R.id.bookNotations);
         this.description = (TextView) findViewById(R.id.bookDescription);
+        this.notations = (ListView) findViewById(R.id.bookNotations);
+        this.thumbnail = (ImageView) findViewById(R.id.bookThumbnail);
         this.addCollection = (AddCollection) findViewById(R.id.buttonCollection);
         this.addWishlist = (AddWishlist) findViewById(R.id.buttonWishlist);
+        this.picasso = Picasso.with(this);
 
 
         Intent intent = getIntent();
@@ -75,12 +82,14 @@ public class BookActivity extends AppCompatActivity {
 
     public void setBook(Book book) {
         this.book = book;
-        this.title.setText(book.title);
+        this.title.setText(book.title());
         this.authors.setText(authors());
         this.description.setText(book.description);
         this.notations.setAdapter(new NotationAdapter(this, book.notations));
         this.addCollection.setBook(book);
         this.addWishlist.setBook(book);
+
+        picasso.load(book.getThumbName()).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).into(this.thumbnail);
     }
 
     public void setActionBar() {
