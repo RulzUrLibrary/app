@@ -16,8 +16,6 @@ import android.widget.TextView;
 import com.rulzurlibrary.R;
 import com.rulzurlibrary.common.Book;
 import com.rulzurlibrary.common.Serie;
-import com.rulzurlibrary.controllers.AddCollection;
-import com.rulzurlibrary.controllers.AddWishlist;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -68,10 +66,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
 
         assert book != null;
         Log.d(TAG, book.title());
-
         vh.textViewName.setText(book.title());
-        vh.addCollection.setBook(book);
-        vh.addWishlist.setBook(book);
 
         Picasso p = Picasso.with(context);
         //p.setLoggingEnabled(true);
@@ -84,15 +79,11 @@ public class BookAdapter extends ArrayAdapter<Book> {
         final RelativeLayout rootView;
         final ImageView imageView;
         final TextView textViewName;
-        final AddCollection addCollection;
-        final AddWishlist addWishlist;
 
         private ViewHolder(RelativeLayout rootView) {
             this.rootView = rootView;
             this.imageView = rootView.findViewById(R.id.imageView);
             this.textViewName = rootView.findViewById(R.id.textViewName);
-            this.addCollection = rootView.findViewById(R.id.buttonCollection);
-            this.addWishlist = rootView.findViewById(R.id.buttonWishlist);
         }
 
         static BookAdapter.ViewHolder create(RelativeLayout rootView) { return new BookAdapter.ViewHolder(rootView); }

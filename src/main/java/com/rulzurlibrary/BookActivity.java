@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -13,10 +14,22 @@ import com.rulzurlibrary.R;
 import com.rulzurlibrary.adapters.NotationAdapter;
 import com.rulzurlibrary.common.Author;
 import com.rulzurlibrary.common.Book;
+import com.rulzurlibrary.common.RulzUrLibraryService;
 import com.rulzurlibrary.controllers.AddCollection;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class BookActivity extends AppCompatActivity {
+    private final String TAG = "BookActivity";
     private Book book;
+
+    private TextView title;
+    private TextView authors;
+    private TextView description;
+    private ListView notations;
+    private AddCollection addCollection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,23 +37,46 @@ public class BookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book);
         setActionBar();
 
-        book = getIntent().getParcelableExtra("book");
 
-        TextView title = (TextView) findViewById(R.id.bookName);
-        title.setText(book.title);
+        this.title = (TextView) findViewById(R.id.bookName);
+        this.authors = (TextView) findViewById(R.id.bookAuthors);
+        this.notations = (ListView) findViewById(R.id.bookNotations);
+        this.description = (TextView) findViewById(R.id.bookDescription);
+        this.addCollection = (AddCollection) findViewById(R.id.buttonCollection);
 
-        TextView authors = (TextView) findViewById(R.id.bookAuthors);
-        authors.setText(authors());
 
-        ListView notations = (ListView) findViewById(R.id.bookNotations);
-        notations.setAdapter(new NotationAdapter(this, book.notations));
+        Intent intent = getIntent();
+        if (intent.hasExtra("book")) {
+            setBook((Book) intent.getParcelableExtra("book"));
+        }
+        if (intent.hasExtra("isbn")) {
+            RulzUrLibraryService.client.getBook(intent.getStringExtra("isbn")).enqueue(new Callback<Book>() {
+                @Override
+                public void onResponse(Call<Book> call, Response<Book> response) {
+                    if (response.isSuccessful()) {
+                        Book book = response.body();
+                        assert book != null;
+                        setBook(book);
+                    } else {
+                        Log.e(TAG, response.toString());
+                    }
+                }
 
-        TextView description = (TextView) findViewById(R.id.bookDescription);
-        description.setText(book.description);
+                @Override
+                public void onFailure(Call<Book> call, Throwable t) {
+                    Log.e(TAG, t.getMessage());
+                }
+            });
+        }
+    }
 
-        AddCollection addCollection = (AddCollection) findViewById(R.id.buttonCollection);
-        addCollection.setBook(book);
-
+    public void setBook(Book book) {
+        this.book = book;
+        this.title.setText(book.title);
+        this.authors.setText(authors());
+        this.description.setText(book.description);
+        this.notations.setAdapter(new NotationAdapter(this, book.notations));
+        this.addCollection.setBook(book);
     }
 
     public void setActionBar() {

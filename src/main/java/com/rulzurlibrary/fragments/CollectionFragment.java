@@ -47,7 +47,6 @@ public class CollectionFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<Series> call, @NonNull Response<Series> response) {
                 if (response.isSuccessful()) {
-                    // user object available
                     Series series = response.body();
                     assert series != null;
                     try {

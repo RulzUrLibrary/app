@@ -28,16 +28,5 @@
             android:layout_margin="5dp"
             android:textAppearance="?android:textAppearanceLarge"
             tools:text="TextView" />
-
-        <com.rulzurlibrary.controllers.AddCollection
-            android:id="@+id/buttonCollection"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content" />
-
-        <com.rulzurlibrary.controllers.AddWishlist
-            android:id="@+id/buttonWishlist"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content" />
-
     </LinearLayout>
 </RelativeLayout>
