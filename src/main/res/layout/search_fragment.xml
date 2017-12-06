@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
- xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <Button
+        android:text="Search Book"
+        android:id="@+id/buttonSearch"
+        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-    <SearchView
-        android:id="@+id/action_search"
-        android:orderInCategory="1"
-        app:showAsAction="always"
-        app:actionViewClass="android.widget.SearchView"
-        android:title="Search"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent" />
+        android:layout_height="wrap_content" />
 
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    <Button
+        android:text="Scan barcode"
+        android:id="@+id/buttonScan"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
-    </LinearLayout>
-</RelativeLayout>
+    <Button
+        android:text="Type barcode"
+        android:id="@+id/buttonType"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

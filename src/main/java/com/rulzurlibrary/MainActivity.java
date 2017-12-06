@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
-import com.rulzurlibrary.fragments.ScanFragment;
 import com.rulzurlibrary.fragments.SearchFragment;
 import com.rulzurlibrary.fragments.WishlistFragment;
 

@@ -1,4 +1,4 @@
-package com.rulzurlibrary.fragments;
+package com.rulzurlibrary;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -9,17 +9,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.rulzurlibrary.BookActivity;
-import com.rulzurlibrary.PermissionsDelegate;
-import com.rulzurlibrary.R;
 import com.rulzurlibrary.common.Book;
 import com.rulzurlibrary.common.RulzUrLibraryService;
 
@@ -56,7 +51,7 @@ import static io.fotoapparat.parameter.selector.LensPositionSelectors.lensPositi
 import static io.fotoapparat.parameter.selector.Selectors.firstAvailable;
 import static io.fotoapparat.parameter.selector.SizeSelectors.biggestSize;
 
-public class ScanFragment extends Fragment {
+public class ScanActivity extends AppCompatActivity {
     private CameraView cameraView;
     private TextView resultView;
     private Handler isbnHandler;
@@ -66,15 +61,16 @@ public class ScanFragment extends Fragment {
     private ImageScanner scanner;
     private HashMap<String, Book> gathered;
     private Fotoapparat fotoapparat;
-    private static final String TAG = "ScanFragment";
+    private static final String TAG = "ScanActivity";
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.scan_fragment, container, false);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_scan);
 
-        cameraView = view.findViewById(R.id.camera_view);
-        resultView = view.findViewById(R.id.result);
-        PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this.getActivity());
+        cameraView = (CameraView) findViewById(R.id.camera_view);
+        resultView = (TextView) findViewById(R.id.result);
+        PermissionsDelegate permissionsDelegate = new PermissionsDelegate(this);
         hasCameraPermission = permissionsDelegate.hasCameraPermission();
 
         if (hasCameraPermission) {
@@ -83,7 +79,7 @@ public class ScanFragment extends Fragment {
             permissionsDelegate.requestCameraPermission();
         }
 
-        fotoapparat = createFotoapparat(LensPosition.BACK, view.getContext());
+        fotoapparat = createFotoapparat(LensPosition.BACK, this);
         focusOnClick(cameraView);
         // Instance barcode scanner
         scanner = new ImageScanner();
@@ -101,14 +97,12 @@ public class ScanFragment extends Fragment {
             @Override
             public void handleMessage(Message message) {
                 Book book = (Book) message.obj;
-                Intent intent = new Intent(getContext(), BookActivity.class);
+                Intent intent = new Intent(ScanActivity.this, BookActivity.class);
                 intent.putExtra("book", book);
                 startActivity(intent);
                 showAlertDialog(String.format("Isbn: %s,\nTitle: %s", book.isbn, book.title()));
             }
         };
-
-        return view;
     }
 
     @Override
@@ -137,7 +131,7 @@ public class ScanFragment extends Fragment {
 
     private void showAlertDialog(String message) {
 
-        new AlertDialog.Builder(this.getContext())
+        new AlertDialog.Builder(this)
                 .setTitle(getResources().getString(R.string.app_name))
                 .setCancelable(false)
                 .setMessage(message)
