@@ -25,12 +25,8 @@ public class WishlistFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        /**
-         * Array List for Binding Data from JSON to this List
-         */
         final View view = inflater.inflate(R.layout.wishlist_fragment, container, false);
 
         expandableListView = view.findViewById(R.id.wishlists);
@@ -39,7 +35,6 @@ public class WishlistFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<Wishlists> call, @NonNull Response<Wishlists> response) {
                 if (response.isSuccessful()) {
-                    // user object available
                     Wishlists wishlists = response.body();
                     assert wishlists != null;
                     try {
@@ -49,13 +44,11 @@ public class WishlistFragment extends Fragment {
                     }
                 } else {
                     Log.e(TAG, response.toString());
-                    // error response, no access to resource?
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Wishlists> call, @NonNull Throwable t) {
-                // something went completely south (like no internet connection)
                 Log.d("Error", t.getMessage());
             }
         });
